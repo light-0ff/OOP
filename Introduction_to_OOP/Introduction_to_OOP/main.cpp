@@ -50,11 +50,12 @@ public:
 	}
 
 	//Operators
-	void operator=(const Point& other)
+	Point operator=(const Point& other)
 	{
 		this->x = other.x;
 		this->y = other.y;
 		std::cout << "CoppyAssignment:\t" << this << std::endl;
+		return *this;
 	}
 
 	//		Methods
@@ -73,6 +74,10 @@ public:
 		return sqrt(pow(this->x - other.x, 2) + pow(this->y - other.y, 2));
 	}
 	
+	Point add(const Point& other)
+	{
+
+	}
 };
 double distance2(const Point& A, const Point& B)
 {
@@ -86,6 +91,8 @@ double distance2(const Point& A, const Point& B)
 //#define BASICS
 //#define ENCAPSULATION
 //#define CONSTRUCTORS
+//#define DISTANCE
+//#define ASSIGNMENT_CHECK
 
 void main()
 {
@@ -143,9 +150,22 @@ void main()
 	//B = A;		//Copy Assignment
 #endif // CONSTRUCTORS
 #ifdef ASSIGNMENT_CHECK
+	//Singlle argumetn constructor:
+	/*Point A = 5;
+	Point B(8);*/
 
+	//Point C(5, 2);
+	//Point D = C; //assignnemt
+	//Point E;
+	//E = D; //Copy assignment
+
+	int a, b, c;
+	a = b = c = 0;
+
+	Point A, B, C;
+	A = B = C = Point(5, 3);
 #endif // ASSIGNMENT_CHECK
-
+#ifdef DISTANCE
 	Point A(5, 2);
 	Point B(8, 3);
 	A.print();
@@ -155,5 +175,18 @@ void main()
 	std::cout <<"	Растояние: " << distance2(A, B) << std::endl;
 	A.print();
 	B.print();
+
+#endif // DISTANCE
+
+	//Перегрузка Операторов
+
+	int a = 2;
+	int b = 3;
+	int c = a + b;
+
+	Point A(5, 2);
+	Point B(8, 3);
+	Point C;
+	//C = A + B;
 
 }
