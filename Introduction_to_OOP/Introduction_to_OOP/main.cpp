@@ -1,4 +1,5 @@
 #include<iostream>
+#include <math.h>
 
 class Point
 {
@@ -29,12 +30,8 @@ public:
 	{
 		this->y = y;
 	}
+
 	//		Constructor's:
-	/*Point()
-	{
-		x = y = 0;
-		std::cout << "DefaultConstructor:\t" << this << std::endl;
-	}*/
 	Point(double x = 0, double y = 0)
 	{
 		this->x = x;
@@ -51,6 +48,7 @@ public:
 	{
 		std::cout << "Destructor:\t" << this << std::endl;
 	}
+
 	//Operators
 	void operator=(const Point& other)
 	{
@@ -64,7 +62,26 @@ public:
 	{
 		std::cout << "x = " << x << "\t" << "y = " << y << std::endl;
 	}
+	
+	double distance(const Point& other) const //первый (1) const что-бы не мен€лись значени€
+	{
+		/*double x_distance = this->x - other.x;
+		double y_distance = this->y - other.y;
+		double distance = sqrt(x_distance*x_distance + y_distance * y_distance);
+		return distance;*/
+
+		return sqrt(pow(this->x - other.x, 2) + pow(this->y - other.y, 2));
+	}
+	
 };
+double distance2(const Point& A, const Point& B)
+{
+	//return sqrt((B.get_x() - A.get_x()) * (B.get_x() - A.get_x()) + (B.get_y() - A.get_y()) * (B.get_y() - A.get_y()));
+	double x_distance = B.get_x() - A.get_x();
+	double y_distance = B.get_y() - A.get_y();
+	double distance = sqrt(x_distance*x_distance + y_distance * y_distance);
+	return distance;
+}
 
 //#define BASICS
 //#define ENCAPSULATION
@@ -122,13 +139,21 @@ void main()
 	G.print();
 
 
+	//Point B;	//Default constructor
+	//B = A;		//Copy Assignment
 #endif // CONSTRUCTORS
+#ifdef ASSIGNMENT_CHECK
+
+#endif // ASSIGNMENT_CHECK
 
 	Point A(5, 2);
+	Point B(8, 3);
 	A.print();
-	Point B;	//Default constructor
-	B = A;		//Copy Assignment
 	B.print();
-	//Copy assignment
+	std::cout << A.distance(B) << std::endl << std::endl;
+
+	std::cout <<"	–асто€ние: " << distance2(A, B) << std::endl;
+	A.print();
+	B.print();
 
 }
