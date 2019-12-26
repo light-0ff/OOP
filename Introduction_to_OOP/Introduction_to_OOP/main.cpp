@@ -57,6 +57,30 @@ public:
 		std::cout << "CoppyAssignment:\t" << this << std::endl;
 		return *this;
 	}
+	Point operator+(const Point& other)
+	{
+		this->x += other.x;
+		this->y += other.y;
+		return *this;
+	}
+	Point operator-(const Point& other)
+	{
+		this->x -= other.x;
+		this->y -= other.y;
+		return *this;
+	}
+	Point operator*(const Point& other)
+	{
+		this->x *= other.x;
+		this->y *= other.y;
+		return *this;
+	}
+	Point operator/(const Point& other)
+	{
+		this->x /= other.x;
+		this->y /= other.y;
+		return *this;
+	}
 
 	//		Methods
 	void print() const
@@ -74,11 +98,10 @@ public:
 		return sqrt(pow(this->x - other.x, 2) + pow(this->y - other.y, 2));
 	}
 	
-	Point add(const Point& other)
-	{
-
-	}
+	
 };
+
+
 double distance2(const Point& A, const Point& B)
 {
 	//return sqrt((B.get_x() - A.get_x()) * (B.get_x() - A.get_x()) + (B.get_y() - A.get_y()) * (B.get_y() - A.get_y()));
@@ -187,6 +210,17 @@ void main()
 	Point A(5, 2);
 	Point B(8, 3);
 	Point C;
-	//C = A + B;
+
+	C = A + B;
+	C.print();
+
+	C = C - B;
+	C.print();
+
+	C = C * B;
+	C.print();
+
+	C = C / B;
+	C.print();
 
 }
