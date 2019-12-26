@@ -50,36 +50,46 @@ public:
 	}
 
 	//Operators
-	Point operator=(const Point& other)
+	Point& operator=(const Point& other)
 	{
 		this->x = other.x;
 		this->y = other.y;
 		std::cout << "CoppyAssignment:\t" << this << std::endl;
 		return *this;
 	}
-	Point operator+(const Point& other)
+	Point& operator+=(const Point& other) 
 	{
 		this->x += other.x;
 		this->y += other.y;
 		return *this;
 	}
-	Point operator-(const Point& other)
+	//Point operator+(const Point& other) const
+	//{
+	//	Point result;
+	//	result.x = this->x + other.x;
+	//	result.y = this->y + other.y;
+	//	return result;
+	//}
+	Point operator-(const Point& other) const
 	{
-		this->x -= other.x;
-		this->y -= other.y;
-		return *this;
+		Point result;
+		result.x = this->x - other.x;
+		result.y = this->y - other.y;
+		return result;
 	}
-	Point operator*(const Point& other)
+	Point operator*(const Point& other) const
 	{
-		this->x *= other.x;
-		this->y *= other.y;
-		return *this;
+		Point result;
+		result.x = this->x * other.x;
+		result.y = this->y * other.y;
+		return result;
 	}
-	Point operator/(const Point& other)
+	Point operator/(const Point& other) const
 	{
-		this->x /= other.x;
-		this->y /= other.y;
-		return *this;
+		Point result;
+		result.x = this->x / other.x;
+		result.y = this->y / other.y;
+		return result;
 	}
 
 	//		Methods
@@ -109,6 +119,16 @@ double distance2(const Point& A, const Point& B)
 	double y_distance = B.get_y() - A.get_y();
 	double distance = sqrt(x_distance*x_distance + y_distance * y_distance);
 	return distance;
+}
+
+Point operator+(const Point& left, const Point& right)
+{
+	/*Point result;
+	result.set_x(left.get_x() + right.get_x());
+	result.set_y(left.get_y() + right.get_y()); */
+	std::cout << "----------------------------------------------" << std::endl;
+	//return result;
+	return Point(left.get_x() + right.get_x(), left.get_y() + right.get_y());
 }
 
 //#define BASICS
@@ -210,17 +230,30 @@ void main()
 	Point A(5, 2);
 	Point B(8, 3);
 	Point C;
+	A.print();
+	B.print();
+
+	/*std::cout << "----------------------------------------------" << std::endl;
+	A.operator+(B).operator+(C).operator+(A).print();
+	std::cout << "----------------------------------------------" << std::endl;*/
+	//operator+(A, B);
 
 	C = A + B;
+	std::cout << "----------------------------------------------" << std::endl;
 	C.print();
 
-	C = C - B;
-	C.print();
 
-	C = C * B;
-	C.print();
 
-	C = C / B;
-	C.print();
+	//A += B;
+	//A.print();
+	//C = C - B;
+	//C.print();
 
+	//C = C * B;
+	//C.print();
+
+	//C = C / B;
+	//C.print();
+
+	
 }
