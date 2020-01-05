@@ -63,6 +63,24 @@ public:
 		this->y += other.y;
 		return *this;
 	}
+	Point& operator-=(const Point& other)
+	{
+		this->x -= other.x;
+		this->y -= other.y;
+		return *this;
+	}
+	Point& operator*=(const Point& other)
+	{
+		this->x *= other.x;
+		this->y *= other.y;
+		return *this;
+	}
+	Point& operator/=(const Point& other)
+	{
+		this->x /= other.x;
+		this->y /= other.y;
+		return *this;
+	}
 	//Point operator+(const Point& other) const
 	//{
 	//	Point result;
