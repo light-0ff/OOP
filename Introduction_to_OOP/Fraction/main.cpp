@@ -257,7 +257,7 @@ void main()
 	Fraction A;
 	A.set_integer(0);
 	A.set_numerator(8);
-	A.set_denominator(15);
+	A.set_denominator(9);
 
 	A.print();
 
@@ -269,7 +269,7 @@ void main()
 	Fraction B;
 	B.set_integer(0);
 	B.set_numerator(2);
-	B.set_denominator(28);
+	B.set_denominator(12);
 
 	B.print();
 
