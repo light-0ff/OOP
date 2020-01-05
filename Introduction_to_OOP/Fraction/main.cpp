@@ -1,6 +1,23 @@
 #include<iostream>
 #include <math.h>
 
+int NOD(int n1, int n2)
+{
+	int div;
+	if (n1 == n2)  return n1;
+	int d = n1 - n2;
+	if (d < 0) {
+		d = -d;  div = NOD(n1, d);
+	}
+	else
+		div = NOD(n2, d);
+	return div;
+}
+int NOK(int n1, int n2)
+{
+	return n1 * n2 / NOD(n1, n2);
+}
+
 class Fraction
 {
 	int integer;
@@ -74,12 +91,14 @@ public: //get & set методы
 	}
 	Fraction& operator+=(const Fraction& other)
 	{
+		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
+		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		if (this->denominator != other.denominator)
 		{
 			std::cout << "THIS" << std::endl;
 			this->integer += other.integer;
-			this->numerator = numerator * other.denominator + other.numerator * this->denominator;
-			this->denominator = other.denominator * this->denominator;
+			this->numerator = numerator * HOK_A + other.numerator * HOK_B;
+			this->denominator = other.denominator * HOK_A;
 		}
 		else {
 			std::cout << "ELSE" << std::endl;
@@ -92,12 +111,14 @@ public: //get & set методы
 	}
 	Fraction& operator-=(const Fraction& other)
 	{
+		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
+		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		if (this->denominator != other.denominator)
 		{
 			std::cout << "THIS" << std::endl;
 			this->integer -= other.integer;
-			this->numerator = numerator * other.denominator - other.numerator * this->denominator;
-			this->denominator = other.denominator * this->denominator;
+			this->numerator = numerator * HOK_A - other.numerator * HOK_B;
+			this->denominator = denominator * HOK_A;
 		}
 		else {
 			std::cout << "ELSE" << std::endl;
@@ -108,20 +129,56 @@ public: //get & set методы
 		std::cout << "----------------------------------------------" << std::endl;
 		return *this;
 	}
+	Fraction& operator*=(const Fraction& other)
+	{
+		if (this->denominator != other.denominator)
+		{
+			std::cout << "THIS" << std::endl;
+			this->integer *= other.integer;
+			this->numerator *= other.numerator;
+			this->denominator *= other.denominator;
+		}
+		else {
+			std::cout << "ELSE" << std::endl;
+			this->integer *= other.integer;
+			this->numerator *= other.numerator;
+			this->denominator = denominator;
+		}
+		std::cout << "----------------------------------------------" << std::endl;
+		return *this;
+	}
+	Fraction& operator/=(const Fraction& other)
+	{
+		if (this->denominator != other.denominator)
+		{
+			std::cout << "THIS" << std::endl;
+			this->integer /= other.integer;
+			this->numerator /= other.denominator;
+			this->denominator /= other.numerator;
+		}
+		else {
+			std::cout << "ELSE" << std::endl;
+			this->integer -= other.integer;
+			this->numerator -= other.denominator;
+			this->denominator = numerator;
+		}
+		std::cout << "----------------------------------------------" << std::endl;
+		return *this;
+	}
 	Fraction operator+(const Fraction& other) //const
 	{
-		//int HOK_A = HOK(this->denominator, other.denominator) / this->denominator;
-		//int HOK_B = HOK(this->denominator, other.denominator) / other.denominator;
+		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
+		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		Fraction result;
 		if (this->denominator != other.denominator)
 		{
 			result.integer = 0;
 			std::cout << result.integer << std::endl;
 
-			result.numerator = (this->numerator * other.denominator) + (other.numerator * this->denominator);
+			result.numerator = (this->numerator * HOK_A) + (other.numerator * HOK_B);
 			std::cout << result.numerator << std::endl;
 
-			result.denominator = this->denominator * other.denominator;
+			result.denominator = this->denominator * HOK_A;
 			std::cout << result.denominator << std::endl;
 		}
 		else 
@@ -142,16 +199,18 @@ public: //get & set методы
 	}
 	Fraction operator-(const Fraction& other) //const
 	{
+		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
+		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		Fraction result;
 		result.integer = 0;
 		std::cout << result.integer << std::endl;
 
-		result.numerator = (this->numerator * other.denominator) - (other.numerator * this->denominator);
+		result.numerator = ((this->numerator * HOK_A) - (other.numerator * HOK_B));
 		std::cout << result.numerator << std::endl;
 
 		if (this->denominator != other.denominator)
 		{
-			result.denominator = this->denominator * other.denominator;
+			result.denominator = this->denominator * HOK_A;
 		}
 		std::cout << result.denominator << std::endl;
 
@@ -160,6 +219,7 @@ public: //get & set методы
 	}
 	Fraction operator*(const Fraction& other) const
 	{
+
 		Fraction result;
 		result.integer = 0;
 		std::cout << result.integer << std::endl;
@@ -216,22 +276,7 @@ public: //get & set методы
 	}
 };
 
-int NOD(int n1, int n2)
-{
-	int div;
-	if (n1 == n2)  return n1;
-	int d = n1 - n2;
-	if (d < 0) {
-		d = -d;  div = NOD(n1, d);
-	}
-	else
-		div = NOD(n2, d);
-	return div;
-}
-int NOK(int n1, int n2)
-{
-	return n1 * n2 / NOD(n1, n2);
-}
+
 
 //Fraction operator+(const Fraction& left, const Fraction& right)
 //{
@@ -257,7 +302,7 @@ void main()
 	Fraction A;
 	A.set_integer(0);
 	A.set_numerator(8);
-	A.set_denominator(9);
+	A.set_denominator(12);
 
 	A.print();
 
@@ -269,17 +314,20 @@ void main()
 	Fraction B;
 	B.set_integer(0);
 	B.set_numerator(2);
-	B.set_denominator(12);
+	B.set_denominator(20);
 
 	B.print();
 
 	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator() )<< std::endl;
-	
-	A += B;
-	A.print();
-	A -= B;
-	A.print();
+	//
+	//A += B;
+	//A.print();
+	//A -= B;
+	//A.print();
 	Fraction C = A + B;
+	C = A -= B;
+	C = A * B;
+	C = A / B;
 	C.print();
 
 }
