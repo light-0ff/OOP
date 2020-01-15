@@ -285,27 +285,12 @@ public: //get & set методы
 
 
 
-//Fraction operator+(const Fraction& left, const Fraction& right)
-//{
-//	return (1, 2, 3);
-//}
+#define CONSTRUCTORS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
 	/*
-	try
-	{
-	Fraction A;
-	A.set_integer(2);
-	A.set_numerator(3);
-	A.set_denominator(0);
-	}
-	catch (std::exception e)
-	{
-	std::cerr << e.what() << std::endl;
-	}
-	*/
 	std::cout << "Fraction A:" << std::endl;
 	Fraction A;
 	A.set_integer(1);
@@ -336,11 +321,6 @@ void main()
 	B.print();
 
 	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator()) << std::endl;
-	//
-	//A += B;
-	//A.print();
-	//A -= B;
-	//A.print();
 
 	std::cout << delimiter << std::endl;
 	std::cout << "Fraction C:" << std::endl;
@@ -357,6 +337,13 @@ void main()
 	C = C / B;
 	C.print();
 	std::cout << line << std::endl;
-	
 	std::cout << delimiter << std::endl;
+	*/
+#ifdef CONSTRUCTORS_CHECK
+	Fraction A;
+	A.print();
+
+
+#endif // cons
+
 }
