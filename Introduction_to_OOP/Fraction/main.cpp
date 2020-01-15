@@ -64,110 +64,47 @@ public: //get & set методы
 	}
 	////////////////////////////////////////////////////////////////
 	//		Constructor's:
-	Fraction(int integer = 0, double numerator = 0, double denominator = 0)
+	Fraction()
+	{
+		this->integer = 0;
+		this->numerator = 0;
+		this->denominator = 1;
+		std::cout << "ZeroConstructor:\t" << this << std::endl;
+	}
+	Fraction(int integer)
+	{
+		this->integer = integer;
+		this->numerator = 0;
+		this->denominator = 1;
+		std::cout << "SingleArgConstruct:\t" << this << std::endl;
+	}
+	Fraction(double numerator, double denominator)
+	{
+		this->integer = 0;
+		this->numerator = numerator;
+		this->denominator = denominator;
+		std::cout << "DoubleArgConstructor:\t" << this << std::endl;
+	}
+	Fraction(int integer, double numerator , double denominator )
 	{
 		this->integer = integer;
 		this->numerator = numerator;
 		this->denominator = denominator;
-		std::cout << "DefaultConstructor:\t" << this << std::endl;;
+		std::cout << "DefaultConstructor:\t" << this << std::endl;
 	}
-	Fraction(const Fraction& other)
-	{
-		this->integer = other.integer;
-		this->numerator = other.numerator;
-		this->denominator = other.denominator;
-		std::cout << "CopyConstructor: " << this << std::endl;
-	}
+	//Fraction(const Fraction& other)
+	//{
+	//	this->integer = other.integer;
+	//	this->numerator = other.numerator;
+	//	this->denominator = other.denominator;
+	//	std::cout << "CopyConstructor: " << this << std::endl;
+	//}
 	~Fraction()
 	{
 		std::cout << "Destructor:\t" << this << std::endl;
 	}
 	/////////////////////////////////////////////////////////////
 	//		Operators
-	Fraction operator=(const Fraction& other) //const
-	{
-		this->integer = other.integer;
-		this->numerator = other.numerator;
-		this->denominator = other.denominator;
-		std::cout << "CoppyAssignment:\t" << this << std::endl;
-		return *this;
-	}
-	Fraction& operator+=(const Fraction& other)
-	{
-		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
-		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
-		if (this->denominator != other.denominator)
-		{
-			std::cout << "THIS" << std::endl;
-			this->integer += other.integer;
-			this->numerator = numerator * HOK_A + other.numerator * HOK_B;
-			this->denominator = other.denominator * HOK_A;
-		}
-		else {
-			std::cout << "ELSE" << std::endl;
-			this->integer += other.integer;
-			this->numerator += other.numerator;
-			this->denominator = denominator;
-		}
-		std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-		return *this;
-	}
-	Fraction& operator-=(const Fraction& other)
-	{
-		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
-		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
-		if (this->denominator != other.denominator)
-		{
-			std::cout << "THIS" << std::endl;
-			this->integer -= other.integer;
-			this->numerator = numerator * HOK_A - other.numerator * HOK_B;
-			this->denominator = denominator * HOK_A;
-		}
-		else {
-			std::cout << "ELSE" << std::endl;
-			this->integer -= other.integer;
-			this->numerator -= other.numerator;
-			this->denominator = denominator;
-		}
-		std::cout << "----------------------------------------------" << std::endl;
-		return *this;
-	}
-	Fraction& operator*=(const Fraction& other)
-	{
-		if (this->denominator != other.denominator)
-		{
-			std::cout << "THIS" << std::endl;
-			this->integer *= other.integer;
-			this->numerator *= other.numerator;
-			this->denominator *= other.denominator;
-		}
-		else {
-			std::cout << "ELSE" << std::endl;
-			this->integer *= other.integer;
-			this->numerator *= other.numerator;
-			this->denominator = denominator;
-		}
-		std::cout << "----------------------------------------------" << std::endl;
-		return *this;
-	}
-	Fraction& operator/=(const Fraction& other)
-	{
-		if (this->denominator != other.denominator)
-		{
-			std::cout << "THIS" << std::endl;
-			this->integer /= other.integer;
-			this->numerator /= other.denominator;
-			this->denominator /= other.numerator;
-		}
-		else {
-			std::cout << "ELSE" << std::endl;
-			this->integer -= other.integer;
-			this->numerator -= other.denominator;
-			this->denominator = numerator;
-		}
-		std::cout << "----------------------------------------------" << std::endl;
-		return *this;
-	}
 	Fraction operator+(const Fraction& other) //const
 	{
 		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
@@ -243,18 +180,29 @@ public: //get & set методы
 	//		Methods
 	void print() const
 	{
-		std::cout << "x = " << integer << "(" << numerator << "/" << denominator << ")" << std::endl;
+		//std::cout << "x = " << integer << "(" << numerator << "/" << denominator << ")" << std::endl;
+		if (integer)std::cout << integer;
+		if (numerator)
+		{
+			if (integer)std::cout << "(";
+			std::cout << numerator << "/" << denominator;
+			if (integer)std::cout << ")";
+		}
+		if (integer == 0 && numerator == 0)std::cout << 0;
+		std::cout << std::endl;
 	}
 	void to_proper()
 	{
-		if (numerator >= denominator)
-		{
-			this->integer += numerator / denominator;
-			this->numerator = (numerator - (integer * denominator));
-		}
-		else {
-			std::cout << "дробь и так правильная ";
-		}
+		integer += numerator / denominator;
+		numerator %= denominator;
+		//if (numerator >= denominator)
+		//{
+		//	this->integer += numerator / denominator;
+		//	this->numerator = (numerator - (integer * denominator));
+		//}
+		//else {
+		//	std::cout << "дробь и так правильная ";
+		//}
 	}
 	void to_improper()
 	{
@@ -275,8 +223,28 @@ void main()
 #ifdef CONSTRUCTORS_CHECK
 	Fraction A;
 	A.print();
+	std::cout << line << std::endl;
 
+	Fraction B = 3;
+	B.print();
+	std::cout << line << std::endl;
 
-#endif // cons
+	Fraction C(1, 2);
+	C.print();
+	std::cout << line << std::endl;
+
+	Fraction D(2, 3, 4);
+	D.print();
+	D.to_improper();
+	D.print();
+	std::cout << line << std::endl;
+
+	Fraction E(7, 3);
+	E.print();
+	E.to_proper();
+	E.print();
+	std::cout << line << std::endl;
+
+#endif // constructors_check
 
 }
