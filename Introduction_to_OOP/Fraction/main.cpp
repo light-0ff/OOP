@@ -1,6 +1,9 @@
 #include<iostream>
 #include <math.h>
 
+#define delimiter "\n========================================================\n"
+#define line "\n-----------------------------------------\n"
+
 int NOD(int n1, int n2)
 {
 	int div;
@@ -24,7 +27,7 @@ class Fraction
 	int numerator;
 	int denominator;
 public: //get & set методы
-	
+
 	int get_integer() const
 	{
 		return integer;
@@ -37,7 +40,7 @@ public: //get & set методы
 	{
 		return denominator;
 	}
-	
+
 	void set_integer(int integer)
 	{
 		this->integer = integer;
@@ -59,8 +62,8 @@ public: //get & set методы
 		}
 		this->denominator = denominator ? denominator : 1;
 	}
-////////////////////////////////////////////////////////////////
-		//		Constructor's:
+	////////////////////////////////////////////////////////////////
+	//		Constructor's:
 	Fraction(int integer = 0, double numerator = 0, double denominator = 0)
 	{
 		this->integer = integer;
@@ -71,7 +74,7 @@ public: //get & set методы
 	Fraction(const Fraction& other)
 	{
 		this->integer = other.integer;
-		this->numerator = other.denominator;
+		this->numerator = other.numerator;
 		this->denominator = other.denominator;
 		std::cout << "CopyConstructor: " << this << std::endl;
 	}
@@ -79,8 +82,8 @@ public: //get & set методы
 	{
 		std::cout << "Destructor:\t" << this << std::endl;
 	}
-/////////////////////////////////////////////////////////////
-		//		Operators
+	/////////////////////////////////////////////////////////////
+	//		Operators
 	Fraction operator=(const Fraction& other) //const
 	{
 		this->integer = other.integer;
@@ -181,7 +184,7 @@ public: //get & set методы
 			result.denominator = this->denominator * HOK_A;
 			std::cout << result.denominator << std::endl;
 		}
-		else 
+		else
 		{
 			result.integer = 0;
 			std::cout << result.integer << std::endl;
@@ -256,7 +259,7 @@ public: //get & set методы
 
 		return result;
 	}
-		//		Methods
+	//		Methods
 	void print() const
 	{
 		std::cout << "x = " << integer << "(" << numerator << "/" << denominator << ")" << std::endl;
@@ -268,12 +271,16 @@ public: //get & set методы
 			this->integer += numerator / denominator;
 			this->numerator = (numerator - (integer * denominator));
 		}
+		else {
+			std::cout << "дробь и так правильная ";
+		}
 	}
 	void to_improper()
 	{
 		this->numerator += integer * denominator;
 		this->integer = 0;
 	}
+
 };
 
 
@@ -289,45 +296,67 @@ void main()
 	/*
 	try
 	{
-		Fraction A;
-		A.set_integer(2);
-		A.set_numerator(3);
-		A.set_denominator(0);
+	Fraction A;
+	A.set_integer(2);
+	A.set_numerator(3);
+	A.set_denominator(0);
 	}
 	catch (std::exception e)
 	{
-		std::cerr << e.what() << std::endl;
+	std::cerr << e.what() << std::endl;
 	}
 	*/
+	std::cout << "Fraction A:" << std::endl;
 	Fraction A;
-	A.set_integer(0);
+	A.set_integer(1);
 	A.set_numerator(8);
 	A.set_denominator(12);
 
+	std::cout << "\t первая дробь ";
 	A.print();
 
+	std::cout << "правельная дробь: \t";
 	A.to_proper();
 	A.print();
+	std::cout << "неправельная дробь: \t";
 	A.to_improper();
 	A.print();
+	std::cout << "снова правельная дробь: \t";
+	A.to_proper();
+	A.print();
 
+	std::cout << delimiter << std::endl;
+	std::cout << "Fraction B:" << std::endl;
 	Fraction B;
 	B.set_integer(0);
 	B.set_numerator(2);
 	B.set_denominator(20);
 
+	std::cout << "\t вторая дробь ";
 	B.print();
 
-	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator() )<< std::endl;
+	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator()) << std::endl;
 	//
 	//A += B;
 	//A.print();
 	//A -= B;
 	//A.print();
-	Fraction C = A + B;
-	C = A -= B;
-	C = A * B;
-	C = A / B;
-	C.print();
 
+	std::cout << delimiter << std::endl;
+	std::cout << "Fraction C:" << std::endl;
+	Fraction C = A + B;
+	C.print();
+	std::cout << line << std::endl;
+	C = A - B;
+	C.print();
+	std::cout << line << std::endl;
+	C = A * B;
+	C.print();
+	std::cout << line << std::endl;
+	//C = A / B;
+	C = C / B;
+	C.print();
+	std::cout << line << std::endl;
+	
+	std::cout << delimiter << std::endl;
 }
