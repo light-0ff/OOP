@@ -176,24 +176,18 @@ public: //get & set методы
 		if (this->denominator != other.denominator)
 		{
 			result.integer = 0;
-			std::cout << result.integer << std::endl;
 
 			result.numerator = (this->numerator * HOK_A) + (other.numerator * HOK_B);
-			std::cout << result.numerator << std::endl;
 
 			result.denominator = this->denominator * HOK_A;
-			std::cout << result.denominator << std::endl;
 		}
 		else
 		{
 			result.integer = 0;
-			std::cout << result.integer << std::endl;
 
 			result.numerator = this->numerator + other.numerator;
-			std::cout << result.numerator << std::endl;
 
 			result.denominator = this->denominator;
-			std::cout << result.denominator << std::endl;
 		}
 
 		result.print();
@@ -206,18 +200,14 @@ public: //get & set методы
 		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		Fraction result;
 		result.integer = 0;
-		std::cout << result.integer << std::endl;
 
 		result.numerator = ((this->numerator * HOK_A) - (other.numerator * HOK_B));
-		std::cout << result.numerator << std::endl;
 
 		if (this->denominator != other.denominator)
 		{
 			result.denominator = this->denominator * HOK_A;
 		}
-		std::cout << result.denominator << std::endl;
 
-		result.print();
 		return result;
 	}
 	Fraction operator*(const Fraction& other) const
@@ -225,18 +215,13 @@ public: //get & set методы
 
 		Fraction result;
 		result.integer = 0;
-		std::cout << result.integer << std::endl;
 
 		result.numerator = this->numerator * other.numerator;
-		std::cout << result.numerator << std::endl;
 
 		if (this->denominator != other.denominator)
 		{
 			result.denominator = this->denominator * other.denominator;
 		}
-		std::cout << result.denominator << std::endl;
-
-		result.print();
 
 		return result;
 	}
@@ -247,15 +232,11 @@ public: //get & set методы
 		std::cout << result.integer << std::endl;
 
 		result.numerator = this->numerator * other.denominator;
-		std::cout << result.numerator << std::endl;
 
 		if (this->denominator != other.denominator)
 		{
 			result.denominator = this->denominator * other.numerator;
 		}
-		std::cout << result.denominator << std::endl;
-
-		result.print();
 
 		return result;
 	}
@@ -290,55 +271,7 @@ public: //get & set методы
 void main()
 {
 	setlocale(LC_ALL, "");
-	/*
-	std::cout << "Fraction A:" << std::endl;
-	Fraction A;
-	A.set_integer(1);
-	A.set_numerator(8);
-	A.set_denominator(12);
 
-	std::cout << "\t первая дробь ";
-	A.print();
-
-	std::cout << "правельная дробь: \t";
-	A.to_proper();
-	A.print();
-	std::cout << "неправельная дробь: \t";
-	A.to_improper();
-	A.print();
-	std::cout << "снова правельная дробь: \t";
-	A.to_proper();
-	A.print();
-
-	std::cout << delimiter << std::endl;
-	std::cout << "Fraction B:" << std::endl;
-	Fraction B;
-	B.set_integer(0);
-	B.set_numerator(2);
-	B.set_denominator(20);
-
-	std::cout << "\t вторая дробь ";
-	B.print();
-
-	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator()) << std::endl;
-
-	std::cout << delimiter << std::endl;
-	std::cout << "Fraction C:" << std::endl;
-	Fraction C = A + B;
-	C.print();
-	std::cout << line << std::endl;
-	C = A - B;
-	C.print();
-	std::cout << line << std::endl;
-	C = A * B;
-	C.print();
-	std::cout << line << std::endl;
-	//C = A / B;
-	C = C / B;
-	C.print();
-	std::cout << line << std::endl;
-	std::cout << delimiter << std::endl;
-	*/
 #ifdef CONSTRUCTORS_CHECK
 	Fraction A;
 	A.print();
