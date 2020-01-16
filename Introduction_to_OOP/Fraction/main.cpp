@@ -107,73 +107,103 @@ public: //get & set методы
 	//		Operators
 	Fraction operator+(const Fraction& other) //const
 	{
-		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
-		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
+		//if (this->denominator != other.denominator)
+		//{
+		//	result.integer = 0;
+		//	result.numerator = (this->numerator * HOK_A) + (other.numerator * HOK_B);
+		//	result.denominator = this->denominator * HOK_A;
+		//}
+		//else
+		//{
+		//	result.integer = 0;
+		//	result.numerator = this->numerator + other.numerator;
+		//	result.denominator = this->denominator;
+		//}
 		Fraction result;
-		if (this->denominator != other.denominator)
+		Fraction left = *this;
+		Fraction right = other;
+		left.to_improper();
+		right.to_improper();
+		int HOK_A = NOK(left.denominator, right.denominator) / left.denominator;
+		int HOK_B = NOK(left.denominator, right.denominator) / right.denominator;
+		if (left.denominator != right.denominator)
 		{
-			result.integer = 0;
-
-			result.numerator = (this->numerator * HOK_A) + (other.numerator * HOK_B);
-
-			result.denominator = this->denominator * HOK_A;
+			int NOK = left.denominator * HOK_A;
+			result.numerator = (left.numerator * HOK_A) + (right.numerator * HOK_B);
+			result.denominator = left.denominator * HOK_A;
 		}
 		else
 		{
-			result.integer = 0;
-
-			result.numerator = this->numerator + other.numerator;
-
-			result.denominator = this->denominator;
+			result.numerator = left.numerator + right.numerator;
+			result.denominator = left.denominator;
 		}
 
-		result.print();
-
+		result.to_proper();
 		return result;
 	}
 	Fraction operator-(const Fraction& other) //const
 	{
-		int HOK_A = NOK(this->denominator, other.denominator) / denominator;
-		int HOK_B = NOK(this->denominator, other.denominator) / other.denominator;
 		Fraction result;
-		result.integer = 0;
+		Fraction left = *this;
+		Fraction right = other;
+		left.to_improper();
+		right.to_improper();
+		int HOK_A = NOK(left.denominator, right.denominator) / left.denominator;
+		int HOK_B = NOK(left.denominator, right.denominator) / right.denominator;
 
-		result.numerator = ((this->numerator * HOK_A) - (other.numerator * HOK_B));
-
-		if (this->denominator != other.denominator)
+		if (left.denominator != right.denominator)
 		{
-			result.denominator = this->denominator * HOK_A;
+			result.numerator = (left.numerator * HOK_A) - (right.numerator * HOK_B);
+			result.denominator = left.denominator * HOK_A;
 		}
-
+		else
+		{
+			result.numerator = left.numerator - right.numerator;
+			result.denominator = left.denominator;
+		}
+		result.to_proper();
 		return result;
 	}
-	Fraction operator*(const Fraction& other) const
-	{
-
-		Fraction result;
-		result.integer = 0;
-
-		result.numerator = this->numerator * other.numerator;
-
-		if (this->denominator != other.denominator)
-		{
-			result.denominator = this->denominator * other.denominator;
-		}
-
-		return result;
-	}
+//	Fraction operator*(const Fraction& other) const
+//	{
+//		Fraction result;
+//		Fraction left = *this;
+//		Fraction right = other;
+//		left.to_improper();
+//		right.to_improper();
+//		result.numerator = left.numerator * right.numerator;
+//		result.denominator = left.denominator * right.denominator;
+//		result.to_proper();
+//	/*	if (other.integer) {
+//			result.numerator = this->numerator * (other.denominator + other.integer * other.denominator);
+//		}
+//		if (other.integer == 0) {
+//			result.numerator = this->numerator * other.numerator;
+//		}
+//
+//		if (this->denominator != other.denominator)
+//		{
+//			result.denominator = this->denominator * other.denominator;
+//		}
+//*/
+//		return result;
+//	}
 	Fraction operator/(const Fraction& other) const
 	{
 		Fraction result;
-		result.integer = 0;
-		std::cout << result.integer << std::endl;
-
-		result.numerator = this->numerator * other.denominator;
-
-		if (this->denominator != other.denominator)
-		{
-			result.denominator = this->denominator * other.numerator;
-		}
+		Fraction left = *this;
+		Fraction right = other;
+		left.to_improper();
+		right.to_improper();
+		result.numerator = left.numerator * right.denominator;
+		result.denominator = left.denominator * right.numerator;
+		result.to_proper();
+		//if (other.integer) {
+		//	result.numerator = this->numerator * (other.denominator + other.integer * other.denominator);
+		//}
+		//if (other.integer == 0) {
+		//	result.numerator = this->numerator * other.denominator;
+		//}
 
 		return result;
 	}
@@ -212,6 +242,16 @@ public: //get & set методы
 
 };
 
+Fraction operator*(Fraction left, Fraction right)
+{
+		left.to_improper();
+		right.to_improper();
+		Fraction result(0,left.get_numerator() * right.get_numerator(), left.get_denominator() * right.get_denominator());
+		//result.numerator = left.numerator * right.numerator;
+		//result.denominator = left.denominator * right.denominator;
+		result.to_proper();
+		return result;
+}
 
 
 #define CONSTRUCTORS_CHECK
@@ -222,29 +262,41 @@ void main()
 
 #ifdef CONSTRUCTORS_CHECK
 	Fraction A;
+	std::cout << "A = ";
 	A.print();
 	std::cout << line << std::endl;
 
 	Fraction B = 3;
+	std::cout << "B = ";
 	B.print();
 	std::cout << line << std::endl;
 
 	Fraction C(1, 2);
+	std::cout << "C = ";
 	C.print();
 	std::cout << line << std::endl;
 
-	Fraction D(2, 3, 4);
+	Fraction D(3, 2, 5);
+	std::cout << "D = ";
 	D.print();
 	D.to_improper();
 	D.print();
 	std::cout << line << std::endl;
 
-	Fraction E(7, 3);
+	Fraction E(7, 10);
+	std::cout << "E = ";
 	E.print();
 	E.to_proper();
 	E.print();
-	std::cout << line << std::endl;
-
+	A = D * E;
+	std::cout << line << "A = D * E = ";
+	A.print();
+	A = D + E;
+	std::cout << line << "A = D + E = ";
+	A.print();
+	A = A - C;
+	std::cout << line << "A = A - C = ";
+	A.print();
 #endif // constructors_check
 
 }
