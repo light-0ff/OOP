@@ -306,10 +306,10 @@ void main()
 
 	A.print();
 
-	A.to_proper();
-	A.print();
-	A.to_improper();
-	A.print();
+	//A.to_proper();
+	//A.print();
+	//A.to_improper();
+	//A.print();
 
 	Fraction B;
 	B.set_integer(0);
@@ -319,15 +319,15 @@ void main()
 	B.print();
 
 	std::cout << "Наименьшее общее кратное " << NOK(A.get_denominator(), B.get_denominator() )<< std::endl;
-	//
+
 	//A += B;
 	//A.print();
 	//A -= B;
 	//A.print();
 	Fraction C = A + B;
-	C = A -= B;
-	C = A * B;
-	C = A / B;
+	//C = A -= B;
+	//C = A * B;
+	//C = A / B;
 	C.print();
 
 }
