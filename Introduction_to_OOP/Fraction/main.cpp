@@ -92,13 +92,13 @@ public: //get & set методы
 		this->denominator = denominator;
 		std::cout << "DefaultConstructor:\t" << this << std::endl;
 	}
-	//Fraction(const Fraction& other)
-	//{
-	//	this->integer = other.integer;
-	//	this->numerator = other.numerator;
-	//	this->denominator = other.denominator;
-	//	std::cout << "CopyConstructor: " << this << std::endl;
-	//}
+	Fraction(const Fraction& other)
+	{
+		this->integer = other.integer;
+		this->numerator = other.numerator;
+		this->denominator = other.denominator;
+		std::cout << "CopyConstructor: " << this << std::endl;
+	}
 	~Fraction()
 	{
 		std::cout << "Destructor:\t" << this << std::endl;
@@ -271,7 +271,7 @@ public: //get & set методы
 		//this->denominator = left.get_denominator();
 		return *this;
 	}
-	Fraction operator/=(const Fraction& other)
+	Fraction& operator/=(const Fraction& other)
 	{
 		Fraction left = *this;
 		Fraction right = other;
@@ -286,6 +286,18 @@ public: //get & set методы
 		//this->numerator = left.get_numerator();
 		//this->denominator = left.get_denominator();
 		return *this;
+	}
+	Fraction& operator++()
+	{
+		this->integer++;
+		return *this;
+	}
+	Fraction operator++(int)
+	{
+		Fraction temp = *this;
+
+		this->integer++;
+		return temp;
 	}
 
 	//		Methods
@@ -320,7 +332,6 @@ public: //get & set методы
 		this->numerator += integer * denominator;
 		this->integer = 0;
 	}
-
 };
 
 Fraction operator+(Fraction left, Fraction right)
@@ -391,115 +402,50 @@ Fraction operator/(Fraction left, Fraction right)
 }
 
 ////////////////////////////////////////////////////////
-Fraction operator>(Fraction left, Fraction right)
+bool operator>(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
-	//Fraction result;
-	//if (left.get_denominator() == right.get_denominator())
-	//{
-	//	Fraction result(0, left.get_numerator() > right.get_numerator() ? left.get_numerator() : right.get_numerator(), left.get_denominator());
-	//}
-	//else
-	//{
-	//	double cheat_left = left.get_numerator() / left.get_denominator();
-	//	double cheat_right = right.get_numerator() / right.get_denominator();
-	//	if (cheat_left > cheat_right)
-	//	{
-	//		Fraction result(0, left.get_numerator(), left.get_denominator());
-	//	}
-	//	else
-	//	{
-	//		Fraction result(0, right.get_numerator(), right.get_denominator());
-	//	}
-	//}
-	//
-	//return result;
-	double cheat_left = left.get_numerator() / left.get_denominator();
-	double cheat_right = right.get_numerator() / right.get_denominator();
-	//std::wcout << delimiter << std::endl << std::endl;
-	if (cheat_left > cheat_right)
-	{
-		left.print();
-		std::cout << "TRUE" << std::endl;
-		return 1;
-	}
-	else
-	{
-		right.print();
-		std::cout << "FALSE" << std::endl;
-		return 0;
-	}
+	return left.get_numerator() * right.get_denominator() >
+		   right.get_numerator() * left.get_denominator();
 }
-Fraction operator<(Fraction left, Fraction right)
+bool operator<(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
-	double cheat_left = left.get_numerator() / left.get_denominator();
-	double cheat_right = right.get_numerator() / right.get_denominator();
-	//std::wcout << delimiter << std::endl << std::endl;
-	if (cheat_left < cheat_right)
-	{
-		left.print();
-		std::cout << "TRUE" << std::endl;
-		return 1;
-	}
-	else
-	{
-		right.print();
-		std::cout << "FALSE" << std::endl;
-		return 0;
-	}
+	return left.get_numerator() * right.get_denominator() <
+		   right.get_numerator() * left.get_denominator();
 }
-Fraction operator==(Fraction left, Fraction right)
+bool operator==(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
-	//double cheat_left = left.get_numerator() / left.get_denominator();
-	//double cheat_right = right.get_numerator() / right.get_denominator();
-	//std::wcout << delimiter << std::endl << std::endl;
-	//if (cheat_left == cheat_right)
-	//{
-	//	std::cout << "TRUE" << std::endl;
-	//	return 1;
-	//}
-	//else
-	//{
-	//	std::cout << "FALSE" << std::endl;
-	//	return 0;
-	//}
-	if (left.get_denominator() == right.get_denominator())
-	{
-		if (left.get_numerator() == right.get_numerator())
-		{
-			std::cout << "TRUE" << std::endl;
-			return 1;
-		}
-		else
-		{
-			std::cout << "FALSE" << std::endl;
-			return 0;
-		}
-	}
-	else
-	{
-		int HOK_A = NOK(left.get_denominator(), right.get_denominator()) / left.get_denominator();
-		int HOK_B = NOK(left.get_denominator(), right.get_denominator()) / right.get_denominator();
-		if (left.get_numerator() * HOK_A == right.get_numerator() * HOK_B)
-		{
-			std::cout << "TRUE" << std::endl;
-			return 1;
-		}
-		else
-		{
-			std::cout << "FALSE" << std::endl;
-			return 0;
-		}
-	}
+	return left.get_numerator() * right.get_denominator() == 
+		   right.get_numerator() * left.get_denominator();
+}
+bool operator!=(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() !=
+		   right.get_numerator() * left.get_denominator();
 }
 
-#define CONSTRUCTORS_CHECK
-
+std::ostream& operator<<(std::ostream& os, const Fraction& obj)
+{
+	if (obj.get_integer())std::cout << obj.get_integer();
+	if (obj.get_numerator())
+	{
+		if (obj.get_integer())std::cout << "(";
+		std::cout << obj.get_numerator() << "/" << obj.get_denominator();
+		if (obj.get_integer())std::cout << ")";
+	}
+	if (obj.get_integer() == 0 && obj.get_numerator() == 0)std::cout << 0;
+	//std::cout << std::endl;
+	return os;
+}
+//#define CONSTRUCTORS_CHECK
+#define OPERATORS_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -552,6 +498,20 @@ void main()
 	std::cout << line << X.get_integer() << "(" << X.get_numerator() << "/" << X.get_denominator() << ")" << " == " << Z.get_integer() << "(" << Z.get_numerator() << "/" << Z.get_denominator() << ")" << std::endl;
 	X == Z;
 	std::cout << line;
+	X != Z;
 #endif // constructors_check
+#ifdef OPERATORS_CHECK
+	Fraction A(1, 2);
+	++A;
+	Fraction B = A++;
+	A.print();
+	B.print();
+	std::cout << line;
+	std::cout << A << A << std::endl;
+	std::cout << B << std::endl;
+	Fraction C(3, 4);
+	std::cout << (A==B) << std::endl;
+
+#endif // OPERATOR_CHECK
 
 }
