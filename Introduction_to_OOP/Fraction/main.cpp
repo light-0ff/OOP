@@ -79,13 +79,33 @@ public: //get & set методы
 		this->denominator = 1;
 		std::cout << "SingleArgConstruct:\t" << this << std::endl;
 	}
-	//Fraction(double integer)
-	//{
+	Fraction(double number):Fraction()
+	{
 	// this->integer = integer;
-	// this->numerator = (integer - this->integer)*100;
-	// this->denominator = 100;
-	// std::cout << "Double_Single_Construct:\t" << this << std::endl;
-	//}
+	// double buffer = integer - this->integer;
+	// buffer = round(buffer * 10000) / 10000;
+	//// this->numerator = round((integer - this->integer)*10000) / 10000;
+	// for (int i = 1;buffer > (int)buffer; i*=10)
+	// {
+	//	buffer *= 10;
+	// this->denominator = i * 10;
+	// }
+	// this->numerator = buffer;
+	// //Fraction result = *this;
+	// //result.reduse();
+	// //*this = result;
+	integer = number;
+	number -= integer;
+	for (int i = 0; i < 9; i++)
+	{
+		number *= 10;
+		denominator *= 10;
+	}
+	numerator = number;
+	//this->denominator = denominator;
+	std::cout << numerator << std::endl;
+	std::cout << "(Double)_Single_Construct:\t" << this << std::endl;
+	}
 	Fraction(double numerator, double denominator)
 	{
 		this->integer = 0;
@@ -355,6 +375,35 @@ public: //get & set методы
 		this->numerator += integer * denominator;
 		this->integer = 0;
 	}
+	void reduse()
+	{
+		//int larger = std::max(numerator, denominator);
+		//int fewer = std::min(numerator, denominator);
+		//int remainder = 0;
+		int larger, fewer;
+		if (numerator > denominator)
+		{
+			larger = numerator;
+			fewer = denominator;
+		}
+		else
+		{
+			larger = denominator;
+			fewer = numerator;
+		}
+		int remainder = larger%fewer;
+
+		do
+		{
+			remainder = larger%fewer;
+			larger = fewer;
+			fewer = remainder;
+		} while (remainder);
+
+		int GCD = larger; //Greatest Common Division
+		numerator /= GCD;
+		denominator /= GCD;
+	}
 };
 
 Fraction operator+(Fraction left, Fraction right)
@@ -469,7 +518,7 @@ std::ostream& operator<<(std::ostream& os, const Fraction& obj)
 }
 //#define CONSTRUCTORS_CHECK
 //#define OPERATORS_CHECK
-#define TYPE_CONVERSION
+//#define TYPE_CONVERSION
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -558,8 +607,11 @@ void main()
 	int c = (int)C;
 	std::cout << c << std::endl;
 	//explicit - явное преобразование
+
 #endif // TYPE_CONVERSION
 
 
-
+	Fraction A = 2.23;
+	A.reduse();
+	std::cout << A << std::endl;
 }
