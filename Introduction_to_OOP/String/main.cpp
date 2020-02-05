@@ -89,7 +89,7 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 }
 std::istream& operator>>(std::istream& is,  String& obj)
 {
-	int size = sizeof(obj.get_str());
+	int size = sizeof(obj);
 	char* stroka = new char[size] {};
 	//std::string stroka;
 	//std::getline(std::cin, stroka);
