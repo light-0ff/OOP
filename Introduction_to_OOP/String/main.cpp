@@ -1,11 +1,11 @@
 #include<iostream>
+#include<string>
+
 
 class String
 {
 	int size;	//number of bytes
 	char* str;
-
-
 
 public:
 	int get_size()const
@@ -20,10 +20,10 @@ public:
 	////{
 	////	this->size = size;
 	////}
-	////void set_str(char *str)
-	////{
-	////	this->str = str;
-	////}
+	void set_str(char *str)
+	{
+		this->str = str;
+	}
 
 
 	String(int size = 20)
@@ -77,7 +77,6 @@ public:
 	void print()
 	{
 		std::cout << size << "\t" << str << std::endl;
-
 		std::cout << std::endl;
 	}
 };
@@ -87,6 +86,16 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 {
 	//	std::cout << obj.get_str();
 	return os << obj.get_str();
+}
+std::istream& operator>>(std::istream& is,  String& obj)
+{
+	int size = sizeof(obj.get_str());
+	char* stroka = new char[size] {};
+	//std::string stroka;
+	//std::getline(std::cin, stroka);
+	obj.set_str(stroka);
+	std::cout << "Введите текст из " << size - 1 << " символов: \t";
+	return is >> stroka;
 }
 
 
@@ -108,5 +117,6 @@ void main()
 	str1 = str1;
 	str1.print();
 
+	std::cin >> str1;
 	std::cout << str1 << std::endl;
 }
