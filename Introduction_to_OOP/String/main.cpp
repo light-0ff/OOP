@@ -16,6 +16,12 @@ public:
 	{
 		return str;
 	}
+	char* get_str()
+	{
+		return str;
+	}
+
+
 	void set_size(int size)
 	{
 		this->size = size;
@@ -97,32 +103,22 @@ std::istream& operator>>(std::istream& is,  String& obj)
 	//std::getline(std::cin, stroka);
 	obj.set_str(stroka);
 	std::cout << "Введите текст из " << size - 1 << " символов: \t";
+	//stroka[size-1] = '\0';
 	return is >> stroka;
 }
 
-String operator+(String  left,  String  right)
+String operator+(const String&  left, const String&  right)
 {
-	int size1 = sizeof(left);
-	char* str1 = new char[size1] {};
+	//String cat(left.get_size() + right.get_size());
+	//strcat(cat.get_str(), left.get_str());
+	//strcat(cat.get_str(), right.get_str());
 
-	for (int i = 0;  left.get_str()[i] != '\0'; i++)
-	{
-		str1[i] = left.get_str()[i];
-	}
+	String cat = left.get_size() + right.get_size() - 1;
+	int nachalo = 0;
+	for (int i = 0; i < left.get_size(); i++, nachalo++)cat.get_str()[i] = left.get_str()[i];
+	for (int i = 0; i < right.get_size(); i++, nachalo++)cat.get_str()[nachalo] = left.get_str()[i];
 
-	int size2 = sizeof(right);
-	char* str2 = new char [size2] {};
-	for (int i = 0;  right.get_str()[i] != '\0'; i++)
-	{
-		str2[i] = right.get_str()[i];
-	}
-	//stroka = strcat(left, right);
-	//String result = strcat(left, right);
-	
-	return
-		strcat(
-			 str1, 
-		 str2);
+	return cat;
 }
 
 
@@ -144,10 +140,11 @@ void main()
 	str1 = str1;
 	str1.print();
 
-	//std::cin >> str1;
-	//std::cout << str1 << std::endl;
+	std::cin >> str1;
+	std::cout << str1 << std::endl;
+	std::cout << std::endl << str1 << std::endl;
 
-	str3 = str2 + str1;
+	//str3 = str2 + str1;
 	std::cout << "======================================================================" << std::endl;
 	std::cout << str3 << std::endl;
 	std::cout << "======================================================================" << std::endl;
