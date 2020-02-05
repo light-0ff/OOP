@@ -16,10 +16,10 @@ public:
 	{
 		return str;
 	}
-	////void set_size(int size)
-	////{
-	////	this->size = size;
-	////}
+	void set_size(int size)
+	{
+		this->size = size;
+	}
 	void set_str(char *str)
 	{
 		this->str = str;
@@ -73,6 +73,8 @@ public:
 		return *this;
 	}
 
+
+
 	//	Methods
 	void print()
 	{
@@ -98,6 +100,31 @@ std::istream& operator>>(std::istream& is,  String& obj)
 	return is >> stroka;
 }
 
+String operator+(String  left,  String  right)
+{
+	int size1 = sizeof(left);
+	char* str1 = new char[size1] {};
+
+	for (int i = 0;  left.get_str()[i] != '\0'; i++)
+	{
+		str1[i] = left.get_str()[i];
+	}
+
+	int size2 = sizeof(right);
+	char* str2 = new char [size2] {};
+	for (int i = 0;  right.get_str()[i] != '\0'; i++)
+	{
+		str2[i] = right.get_str()[i];
+	}
+	//stroka = strcat(left, right);
+	//String result = strcat(left, right);
+	
+	return
+		strcat(
+			 str1, 
+		 str2);
+}
+
 
 void main()
 {
@@ -117,6 +144,11 @@ void main()
 	str1 = str1;
 	str1.print();
 
-	std::cin >> str1;
-	std::cout << str1 << std::endl;
+	//std::cin >> str1;
+	//std::cout << str1 << std::endl;
+
+	str3 = str2 + str1;
+	std::cout << "======================================================================" << std::endl;
+	std::cout << str3 << std::endl;
+	std::cout << "======================================================================" << std::endl;
 }
