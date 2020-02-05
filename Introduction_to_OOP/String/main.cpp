@@ -1,6 +1,4 @@
 #include<iostream>
-#include<string>
-
 
 class String
 {
@@ -21,11 +19,6 @@ public:
 		return str;
 	}
 
-
-	void set_size(int size)
-	{
-		this->size = size;
-	}
 	void set_str(char *str)
 	{
 		this->str = str;
@@ -44,7 +37,7 @@ public:
 		this->str = new char[size] {};
 		for (int i = 0; i < size; i++)
 		{
-			this->str[i]=str[i];
+			this->str[i] = str[i];
 		}
 		std::cout << "Constructor:\t" << this << std::endl;
 	}
@@ -78,7 +71,20 @@ public:
 		std::cout << "CoppyAssignment:\t" << this << std::endl;
 		return *this;
 	}
+	const char &operator[](int i) const
+	{
 
+		// index получить
+		// char  вернуть
+		return str[i];
+	}
+	char &operator[](int i)
+	{
+
+		// index получить
+		// char  вернуть
+		return str[i];
+	}
 
 
 	//	Methods
@@ -95,7 +101,7 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 	//	std::cout << obj.get_str();
 	return os << obj.get_str();
 }
-std::istream& operator>>(std::istream& is,  String& obj)
+std::istream& operator>>(std::istream& is, String& obj)
 {
 	int size = sizeof(obj);
 	char* stroka = new char[size] {};
@@ -113,18 +119,20 @@ String operator+(const String&  left, const String&  right)
 	//strcat(cat.get_str(), left.get_str());
 	//strcat(cat.get_str(), right.get_str());
 
-	String cat = left.get_size() + right.get_size() - 1;
+	String cat = left.get_size() + right.get_size()-1;
 	int nachalo = 0;
-	for (int i = 0; i < left.get_size(); i++, nachalo++)cat.get_str()[i] = left.get_str()[i];
-	for (int i = 0; i < right.get_size(); i++, nachalo++)cat.get_str()[nachalo] = left.get_str()[i];
+	for (int i = 0; i < left.get_size()-1; i++, nachalo++)cat[i] = left[i];
+	for (int i = 0; i < right.get_size(); i++, nachalo++)	cat[nachalo] = right[i];
 
 	return cat;
 }
 
+//#define BASE_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
+#ifdef BASE_CHECK
 	String str1;
 	str1.print();
 
@@ -140,12 +148,18 @@ void main()
 	str1 = str1;
 	str1.print();
 
-	std::cin >> str1;
+	/*std::cin >> str1;
 	std::cout << str1 << std::endl;
-	std::cout << std::endl << str1 << std::endl;
+	std::cout << std::endl << str1 << std::endl;*/
 
-	//str3 = str2 + str1;
+	str3 = str2 + str1;
 	std::cout << "======================================================================" << std::endl;
 	std::cout << str3 << std::endl;
 	std::cout << "======================================================================" << std::endl;
+#endif // BASE_CHECK
+
+	String str1 = "Hello";
+	String str2 = "World";
+	String str3 = str1 + str2;
+	std::cout << str3 << std::endl;
 }
