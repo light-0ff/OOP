@@ -48,13 +48,28 @@ public:
 	{
 		this->size = other.size;
 		this->str = new char[size] {};
-		////for (int i = 0; i < size; i++)
-		////{
-		////	this->str[i] = other.str[i];
-		////}
+		////for (int i = 0; i < size; i++)	this->str[i] = other.str[i];
 		// *this = other.str;
 		strcpy(this->str, other.str);
 		std::cout << "CopyConstructor: " << this << std::endl;
+	}
+
+	
+	// move constructor
+	String(String&& other) // : str(other.str) //shas nenuzen
+	{
+		this->size = other.size; //niet
+		this->str = other.str;	//niet2
+		other.str = nullptr;
+		std::cout << std::endl << "=================== " << "Move construcktor" << std::endl << std::endl;
+	}
+	// move assignment
+	String& operator= (String && x) {
+		delete str;
+		str = x.str;
+		x.str = nullptr;
+		std::cout << std::endl << "--------------------- " << "Move assignment" << std::endl << std::endl;
+		return *this;
 	}
 	~String()
 	{
@@ -105,20 +120,6 @@ public:
 		return str[i];
 	}
 
-	// move constructor
-	String(String&& x) : str(x.str)
-	{
-		x.str = nullptr;
-		std::cout << std::endl << "=================== " << "Move construcktor" << std::endl << std::endl;
-	}
-	// move assignment
-	String& operator= (String && x) {
-	delete str;
-	str = x.str;
-	x.str = nullptr;
-	std::cout << std::endl << "--------------------- "<<"Move assignment" << std::endl << std::endl;
-	return *this;
-	}
 
 	//	Methods
 	void print()
@@ -201,6 +202,6 @@ void main()
 	std::cout << std::endl <<"str4 = " << str4 << std::endl << std::endl ;
 
 	str2 = str2 + str4;
-	str4 += str1;
-	std::cout << std::endl << str4 << std::endl << std::endl;
+	//str4 += str1;
+	std::cout << std::endl << str2 << std::endl << std::endl;
 	}
