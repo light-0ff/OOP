@@ -1,5 +1,8 @@
 #include<iostream>
 
+class String;
+String operator+(const String&  left, const String&  right);
+
 class String
 {
 	int size;	//number of bytes
@@ -71,11 +74,26 @@ public:
 		std::cout << "CoppyAssignment:\t" << this << std::endl;
 		return *this;
 	}
+	String& operator+=(const String& other)
+	{
+		//String buffer = *this;
+		//delete[] this->str;
+		//this->size += other.size;
+		//this->str = new char[size] {};
+		//
+		//for (int i = 0; i < buffer.get_size() - 1; i++)str[i] = buffer[i];
+		//for (int i = 0; i < other.get_size() - 1; i++)str[buffer.get_size() - 1 + i] = other[i];
+		//
+		//std::cout << "+=:\t\t" << this << std::endl;
+		//return *this;
+		return *this = *this + other;
+	}
 	const char &operator[](int i) const
 	{
 
 		// index получить
 		// char  вернуть
+		//¬ернуть значение(char) по индексу 
 		return str[i];
 	}
 	char &operator[](int i)
@@ -83,9 +101,24 @@ public:
 
 		// index получить
 		// char  вернуть
+		//¬ернуть значение(char) по индексу 
 		return str[i];
 	}
 
+	// move constructor
+	String(String&& x) : str(x.str)
+	{
+		x.str = nullptr;
+		std::cout << std::endl << "=================== " << "Move construcktor" << std::endl << std::endl;
+	}
+	// move assignment
+	String& operator= (String && x) {
+	delete str;
+	str = x.str;
+	x.str = nullptr;
+	std::cout << std::endl << "--------------------- "<<"Move assignment" << std::endl << std::endl;
+	return *this;
+	}
 
 	//	Methods
 	void print()
@@ -121,7 +154,8 @@ String operator+(const String&  left, const String&  right)
 
 	String cat = left.get_size() + right.get_size()-1;
 	int nachalo = 0;
-	for (int i = 0; i < left.get_size()-1; i++, nachalo++)cat[i] = left[i];
+	for (int i = 0; i < left.get_size() - 1; i++, nachalo++)cat[i] = left[i];
+	//nachalo--;
 	for (int i = 0; i < right.get_size(); i++, nachalo++)	cat[nachalo] = right[i];
 
 	return cat;
@@ -148,9 +182,9 @@ void main()
 	str1 = str1;
 	str1.print();
 
-	/*std::cin >> str1;
+	std::cin >> str1;
 	std::cout << str1 << std::endl;
-	std::cout << std::endl << str1 << std::endl;*/
+	std::cout << std::endl << str1 << std::endl;
 
 	str3 = str2 + str1;
 	std::cout << "======================================================================" << std::endl;
@@ -159,7 +193,14 @@ void main()
 #endif // BASE_CHECK
 
 	String str1 = "Hello";
-	String str2 = "World";
+	String str2("World");
 	String str3 = str1 + str2;
 	std::cout << str3 << std::endl;
-}
+
+	String str4 = String("_random");
+	std::cout << std::endl <<"str4 = " << str4 << std::endl << std::endl ;
+
+	str2 = str2 + str4;
+	str4 += str1;
+	std::cout << std::endl << str4 << std::endl << std::endl;
+	}
