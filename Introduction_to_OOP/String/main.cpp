@@ -169,10 +169,10 @@ bool operator==(const String& left, const String& right)
 		for (int i = 0; i < left.get_size(); i++)
 		{ 
 			if (left[i] != right[i]) return false;
-
 		}
+		return true;
 	}
-	return true;
+	return false;
 	//return (left.get_size() == right.get_size() && left.get_str() == right.get_str());	//некорректно работает
 }
 bool operator!=(const String& left, const String& right)
