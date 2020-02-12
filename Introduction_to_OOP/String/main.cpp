@@ -61,14 +61,15 @@ public:
 		this->size = other.size; //niet
 		this->str = other.str;	//niet2
 		other.str = nullptr;
-		std::cout << std::endl << "=================== " << "Move construcktor" << std::endl << std::endl;
+		std::cout << std::endl << "=================== " << "Move construcktor\t" << this << std::endl;
 	}
 	// move assignment
-	String& operator= (String && x) {
+	String& operator= (String && other) 
+	{
 		delete str;
-		str = x.str;
-		x.str = nullptr;
-		std::cout << std::endl << "--------------------- " << "Move assignment" << std::endl << std::endl;
+		this->str = other.str;
+		other.str = nullptr;
+		std::cout << std::endl << "--------------------- " << "Move assignment\t" << this << std::endl;
 		return *this;
 	}
 	~String()
