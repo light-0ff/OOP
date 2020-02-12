@@ -159,11 +159,47 @@ String operator+(const String&  left, const String&  right)
 	for (int i = 0; i < left.get_size() - 1; i++, nachalo++)cat[i] = left[i];
 	//nachalo--;
 	for (int i = 0; i < right.get_size(); i++, nachalo++)	cat[nachalo] = right[i];
-
 	return cat;
 }
 
+bool operator==(const String& left, const String& right)
+{
+	if (left.get_size() == right.get_size())
+	{
+		for (int i = 0; i < left.get_size(); i++)
+		{ 
+			if (left[i] != right[i]) return false;
+
+		}
+	}
+	return true;
+	//return (left.get_size() == right.get_size() && left.get_str() == right.get_str());	//некорректно работает
+}
+bool operator!=(const String& left, const String& right)
+{
+	return !(left == right);
+}
+bool operator>(const String& left, const String& right)
+{
+	return left.get_str() > right.get_str();
+}
+bool operator<(const String& left, const String& right)
+{
+	return left.get_str() < right.get_str();
+}
+bool operator>=(const String& left, const String& right)
+{
+	return left.get_str() >= right.get_str();
+}
+bool operator<=(const String& left, const String& right)
+{
+	return left.get_str() <= right.get_str();
+}
+
+
 //#define BASE_CHECK
+//#define MOVE_OPERATORS
+#define COMPARISON
 
 void main()
 {
@@ -194,6 +230,9 @@ void main()
 	std::cout << "======================================================================" << std::endl;
 #endif // BASE_CHECK
 
+#ifdef MOVE_OPERATORS
+
+
 	String str1 = "Hello";
 	String str2("World");
 	String str3 = str1 + str2;
@@ -205,4 +244,24 @@ void main()
 	str2 = str2 + str4;
 	//str4 += str1;
 	std::cout << std::endl << str2 << std::endl << std::endl;
-	}
+#endif // MOVE_OPERATORS
+
+#ifdef COMPARISON
+	String str1 = "Hello";
+	String str2 = "World";
+	String str3 = str2;
+	if (str1 == str2)	std::cout << "Равны" << std::endl;
+	if (str1 != str2)	std::cout << "НЕ равны" << std::endl;
+	/////////////////////////////////////////////////////////////////////
+
+	if (str2 == str3)	std::cout << "Равны" << std::endl;
+	if (str2 != str3)	std::cout << "НЕ равны" << std::endl;
+	if (str2 > str3) std::cout << "Больше" << std::endl;
+	if (str2 < str3) std::cout << "Меньше" << std::endl;
+	if (str2 >= str3) std::cout << " Больше-Равно" << std::endl;
+	if (str2 <= str3) std::cout << " Меньше-Равно" << std::endl;
+
+	//std::cout << str1 << " == " << str2 << " = " << str1 == str2 << std::endl;	//проблема с оператором <<
+#endif // COMPARISON
+
+}
