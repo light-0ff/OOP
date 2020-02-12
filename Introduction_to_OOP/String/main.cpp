@@ -22,9 +22,12 @@ public:
 		return str;
 	}
 
-	void set_str(char *str)
+	void set_str(const char *str)
 	{
-		this->str = str;
+		delete[] this->str;
+		this->size = strlen(str) + 1;
+		this->str = new char[size] {};
+		strcpy(this->str, str);
 	}
 
 
@@ -138,22 +141,18 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 }
 std::istream& operator>>(std::istream& is, String& obj)
 {
-	int size = sizeof(obj);
-	char* stroka = new char[size] {};
-	//std::string stroka;
-	//std::getline(std::cin, stroka);
-	obj.set_str(stroka);
-	std::cout << "Введите текст из " << size - 1 << " символов: \t";
-	//stroka[size-1] = '\0';
-	return is >> stroka;
+	char* sz_str = new char[USHRT_MAX] {};
+	is >> sz_str;
+	sz_str = (char*)realloc(sz_str, strlen(sz_str) + 1);
+	obj.set_str(sz_str);
+	delete[] sz_str;
+	return is;
+	//return is >> obj.get_str();
 }
+/////////////////////////////////////////////////////////////////////////////////
 
 String operator+(const String&  left, const String&  right)
 {
-	//String cat(left.get_size() + right.get_size());
-	//strcat(cat.get_str(), left.get_str());
-	//strcat(cat.get_str(), right.get_str());
-
 	String cat = left.get_size() + right.get_size()-1;
 	int nachalo = 0;
 	for (int i = 0; i < left.get_size() - 1; i++, nachalo++)cat[i] = left[i];
@@ -164,16 +163,21 @@ String operator+(const String&  left, const String&  right)
 
 bool operator==(const String& left, const String& right)
 {
-	if (left.get_size() == right.get_size())
+	if (strlen(left.get_str()) != strlen(right.get_str())) return false;
+	for (int i = 0; left[i] != 0 && right[i] != 0; i++)
 	{
-		for (int i = 0; i < left.get_size(); i++)
-		{ 
-			if (left[i] != right[i]) return false;
-		}
-		return true;
+		if (left[i] != right[i]) return false;
 	}
-	return false;
-	//return (left.get_size() == right.get_size() && left.get_str() == right.get_str());	//некорректно работает
+	//if (left.get_size() == right.get_size())
+	//{
+	//	for (int i = 0; i < left.get_size(); i++)
+	//	{ 
+	//		if (left[i] != right[i]) return false;
+	//	}
+		return true;
+	//}
+	//return false;
+	////return (left.get_size() == right.get_size() && left.get_str() == right.get_str());	//некорректно работает
 }
 bool operator!=(const String& left, const String& right)
 {
@@ -181,11 +185,15 @@ bool operator!=(const String& left, const String& right)
 }
 bool operator>(const String& left, const String& right)
 {
-	return left.get_str() > right.get_str();
+	////return left.get_str() > right.get_str();
+	//if (strcmp(left.get_str(), right.get_str()) < 0) return true;
+	//else return false;
+	return strcmp(left.get_str(), right.get_str()) < 0 ? true : false;
 }
 bool operator<(const String& left, const String& right)
 {
-	return left.get_str() < right.get_str();
+	//return left.get_str() < right.get_str();
+	return strcmp(left.get_str(), right.get_str()) > 0 ? true : false;
 }
 bool operator>=(const String& left, const String& right)
 {
@@ -250,18 +258,30 @@ void main()
 	String str1 = "Hello";
 	String str2 = "World";
 	String str3 = str2;
+
+
+	//String str4; 
+	//std::cin >> str4;
+	//std::cout << str4;
+
+
 	if (str1 == str2)	std::cout << "Равны" << std::endl;
 	if (str1 != str2)	std::cout << "НЕ равны" << std::endl;
 	/////////////////////////////////////////////////////////////////////
 
-	if (str2 == str3)	std::cout << "Равны" << std::endl;
-	if (str2 != str3)	std::cout << "НЕ равны" << std::endl;
-	if (str2 > str3) std::cout << "Больше" << std::endl;
-	if (str2 < str3) std::cout << "Меньше" << std::endl;
-	if (str2 >= str3) std::cout << " Больше-Равно" << std::endl;
-	if (str2 <= str3) std::cout << " Меньше-Равно" << std::endl;
+	//if (str2 == str3)	std::cout << "Равны" << std::endl;
+	//if (str2 != str3)	std::cout << "НЕ равны" << std::endl;
+	//if (str2 > str3) std::cout << "Больше" << std::endl;
+	//if (str2 < str3) std::cout << "Меньше" << std::endl;
+	//if (str2 >= str3) std::cout << " Больше-Равно" << std::endl;
+	//if (str2 <= str3) std::cout << " Меньше-Равно" << std::endl;
 
-	//std::cout << str1 << " == " << str2 << " = " << str1 == str2 << std::endl;	//проблема с оператором <<
+	std::cout << str1 << " == " << str2 << " = " << (str1 == str2) << std::endl;
+	std::cout << str3 << " == " << str2 << " = " << (str3 == str2) << std::endl;
+	std::cout << str3 << " != " << str2 << " = " << (str3 != str2) << std::endl;
+	std::cout << str1 << " > " << str2 << " = " << (str1 > str2) << std::endl;
+	std::cout << str1 << " < " << str2 << " = " << (str1 < str2) << std::endl;
+	std::cout << str1 << " <= " << str2 << " = " << (str1 <= str2) << std::endl;
 #endif // COMPARISON
 
 }
