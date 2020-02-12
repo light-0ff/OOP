@@ -31,38 +31,34 @@ public:
 	}
 
 
-	String(int size = 20)
+	explicit String(int size = 40) :size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 		std::cout << "DefaultConstructor:\t" << this << std::endl;
 	}
-	String(const char* str)
+	String(const char* str) :String(strlen(str) + 1)
 	{
-		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
-		for (int i = 0; i < size; i++)
-		{
-			this->str[i] = str[i];
-		}
+		//this->size = strlen(str) + 1;
+		//this->str = new char[size] {};
+		for (int i = 0; i < size; i++)	this->str[i] = str[i];
 		std::cout << "Constructor:\t" << this << std::endl;
 	}
-	String(const String& other)
+	String(const String& other) :String(other.str)
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
-		////for (int i = 0; i < size; i++)	this->str[i] = other.str[i];
-		// *this = other.str;
-		strcpy(this->str, other.str);
+		//this->size = other.size;
+		//this->str = new char[size] {};
+		//////for (int i = 0; i < size; i++)	this->str[i] = other.str[i];
+		//// *this = other.str;
+		//strcpy(this->str, other.str);
 		std::cout << "CopyConstructor: " << this << std::endl;
 	}
 
-	
 	// move constructor
-	String(String&& other) // : str(other.str) //shas nenuzen
+	String(String&& other) :size(other.size), str(other.str)
 	{
-		this->size = other.size; //niet
-		this->str = other.str;	//niet2
+		//this->size = other.size; //niet
+		//this->str = other.str;	//niet2
 		other.str = nullptr;
 		std::cout << std::endl << "=================== " << "Move construcktor\t" << this << std::endl;
 	}
@@ -109,7 +105,6 @@ public:
 	}
 	const char &operator[](int i) const
 	{
-
 		// index получить
 		// char  вернуть
 		//Вернуть значение(char) по индексу 
@@ -117,7 +112,6 @@ public:
 	}
 	char &operator[](int i)
 	{
-
 		// index получить
 		// char  вернуть
 		//Вернуть значение(char) по индексу 
@@ -153,7 +147,7 @@ std::istream& operator>>(std::istream& is, String& obj)
 
 String operator+(const String&  left, const String&  right)
 {
-	String cat = left.get_size() + right.get_size()-1;
+	String cat(left.get_size() + right.get_size()-1); // = заменили на ()
 	int nachalo = 0;
 	for (int i = 0; i < left.get_size() - 1; i++, nachalo++)cat[i] = left[i];
 	//nachalo--;
@@ -239,8 +233,6 @@ void main()
 #endif // BASE_CHECK
 
 #ifdef MOVE_OPERATORS
-
-
 	String str1 = "Hello";
 	String str2("World");
 	String str3 = str1 + str2;
