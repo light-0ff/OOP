@@ -191,11 +191,13 @@ bool operator<(const String& left, const String& right)
 }
 bool operator>=(const String& left, const String& right)
 {
-	return left.get_str() >= right.get_str();
+	//return left.get_str() >= right.get_str();
+	return (left > right || left == right);
 }
 bool operator<=(const String& left, const String& right)
 {
-	return left.get_str() <= right.get_str();
+	//return left.get_str() <= right.get_str();
+	return (left < right || left == right);
 }
 
 
@@ -273,7 +275,7 @@ void main()
 	std::cout << str3 << " != " << str2 << " = " << (str3 != str2) << std::endl;
 	std::cout << str1 << " > " << str2 << " = " << (str1 > str2) << std::endl;
 	std::cout << str1 << " < " << str2 << " = " << (str1 < str2) << std::endl;
-	std::cout << str1 << " <= " << str2 << " = " << (str1 <= str2) << std::endl;
+	std::cout << str3 << " <= " << str2 << " = " << (str3 <= str2) << std::endl;
 #endif // COMPARISON
 
 }
