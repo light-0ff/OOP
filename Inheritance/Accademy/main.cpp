@@ -91,7 +91,7 @@ public:
 	}
 	void set_attendence(unsigned int attendence)
 	{
-		this->rating = rating <= 100 ? rating : 100;
+		this->attendence = attendence <= 100 ? attendence : 100;
 	}
 
 	//	Constructors
@@ -103,7 +103,9 @@ public:
 	{
 		set_speciality(spec);
 		set_group(group);
-		this->rating = this->attendence = 0;
+		set_rating(rating);
+		set_attendence(attendence);
+		//this->rating = this->attendence = 0;
 		std::cout << "SConstructor:\t" << this << std::endl;
 	}
 	~Student()
@@ -171,6 +173,58 @@ public:
 	}
 };
 
+class Graduate:public Student
+{
+	std::string diploma_theme;
+	std::string curator;
+	void set_diploma_theme(const std::string& diploma_theme)
+	{
+		this->diploma_theme = diploma_theme;
+	}
+public:
+	const std::string get_diploma_theme()const
+	{
+		return diploma_theme;
+	}
+	const std::string get_curator()const
+	{
+		return curator;
+	}
+//private:
+//	void set_diploma_theme(const std::string& diploma_theme)
+//	{
+//		this->diploma_theme = diploma_theme;
+//	}
+//public:
+	void set_curator(const std::string& curator)
+	{
+		this->curator = curator;
+	}
+
+	// Constructor's:
+	Graduate
+	(
+		const std::string& last_name, const std::string& first_name, unsigned int age,
+		const std::string& spec, const std::string group, unsigned int rating, unsigned int attendence,
+		const std::string& diploma_theme, const std::string& curator
+	) :Student(last_name, first_name, age,
+		spec, group, rating, attendence)
+	{
+		set_diploma_theme(diploma_theme);
+		set_curator(curator);
+		std::cout << "GConstructor:\t" << this << std::endl;
+	}
+	~Graduate()
+	{
+		std::cout << "GDestructor:\t" << this << std::endl;
+	}
+	void print()
+	{
+		Student::print();
+		std::cout << "Diploma theme:\t" <<diploma_theme<< " Куратор: " << curator << std::endl;
+	}
+		
+};
 
 
 void main() 
@@ -185,4 +239,7 @@ void main()
 
 	Teacher tech("Einstein", "Albert", 141, "Физика", 5);
 	tech.print();
+
+	Graduate exit("Попов", "Сергей", 22, "Философия", "asdf", 95, 70, "быть или не ьыть", "Albert");
+	exit.print();
 }
