@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Inheritance", "Inheritance\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Accademy", "Accademy\Accademy.vcxproj", "{6C6AE781-4A55-48B8-B63E-4EFCAB0BAC97}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheZoo", "TheZoo\TheZoo.vcxproj", "{7CAB916C-7B08-4C81-878B-6F2B35B22882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{6C6AE781-4A55-48B8-B63E-4EFCAB0BAC97}.Release|x64.Build.0 = Release|x64
 		{6C6AE781-4A55-48B8-B63E-4EFCAB0BAC97}.Release|x86.ActiveCfg = Release|Win32
 		{6C6AE781-4A55-48B8-B63E-4EFCAB0BAC97}.Release|x86.Build.0 = Release|Win32
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Debug|x64.ActiveCfg = Debug|x64
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Debug|x64.Build.0 = Debug|x64
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Debug|x86.ActiveCfg = Debug|Win32
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Debug|x86.Build.0 = Debug|Win32
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Release|x64.ActiveCfg = Release|x64
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Release|x64.Build.0 = Release|x64
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Release|x86.ActiveCfg = Release|Win32
+		{7CAB916C-7B08-4C81-878B-6F2B35B22882}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
