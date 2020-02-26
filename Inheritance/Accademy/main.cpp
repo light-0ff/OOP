@@ -48,9 +48,15 @@ public:
 	{
 		std::cout << "HDestructor:\t" << this << std::endl;
 	}
-	void print()const
+	virtual void print()const
 	{
-		std::cout << last_name << "\t" << first_name<<"\t" << age << std::endl;
+		//std::ios_base::left;
+		std::cout.width(8);
+		std::cout << last_name << "\t";
+		std::cout.width(10);
+		std::cout << first_name << "\t";
+		std::cout.width(8);
+		std::cout << age << std::endl;
 	}
 };
 
@@ -218,7 +224,7 @@ public:
 	{
 		std::cout << "GDestructor:\t" << this << std::endl;
 	}
-	void print()
+	void print()const
 	{
 		Student::print();
 		std::cout << "Diploma theme:\t" <<diploma_theme<< " Куратор: " << curator << std::endl;
@@ -226,20 +232,54 @@ public:
 		
 };
 
-
+//#define SET_ACCADEMY
+#define SET_GROUP
 void main() 
 {
 	setlocale(LC_ALL, "");
-
+#ifdef SET_ACCADEMY
 	Human human("Тупенко", "Васыль", 18);
-	human.print();
+	//human.print();
 
 	Student stud("Тупенко", "Васыль", 18, "Дизайн", "СТ ДВ 37");
-	stud.print();
+	//stud.print();
 
 	Teacher tech("Einstein", "Albert", 141, "Физика", 5);
-	tech.print();
+	//tech.print();
 
 	Graduate exit("Попов", "Сергей", 22, "Философия", "asdf", 95, 70, "быть или не ьыть", "Albert");
-	exit.print();
+	//exit.print();
+
+	Human* group2[] =	//Домашка
+	{
+		&tech,
+		&stud,
+		&exit,
+		&human
+	};
+
+	for (int i = 0; i < sizeof(group2) / sizeof(Human*); i++)
+	{
+		group2[i]->print();
+	}
+#endif // SET_ACCADEMY
+#ifdef SET_GROUP
+	Human* group[] =
+	{
+		new Student("Ковальчук", "Антон", 15, "РПО", "СТ ПВ 35", 95, 100),
+		new Student("Кравцов", "Артем", 15, "РПО", "СТ ПВ 35", 85, 97),
+		new Teacher("Кобылинский", "Андрей", 42, "Hardware & Windows", 5, 0),
+		new Student("Горбенко", "Богдан", 16, "РПО", "СТ ПВ 35", 99, 100),
+		new Graduate("Маслак", "Михаил", 17, "РПО", "СТ ПВ 35", 95, 100, "3dShooter Development", "ОА"),
+		new Teacher("Котун", "Олег", 35, "С++", 5, 32),
+		new Graduate("Колач", "Геннадий", 21, "РПО", "СТ ПВ 35", 96, 100, "Разработка игр для Android", "Someone")
+	};
+	
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		std::cout << "--------------------------------------------------------------------------------\n";
+		group[i]->print();
+	}
+
+#endif // SET_GROUP
 }
