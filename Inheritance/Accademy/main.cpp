@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<regex>
 
 class Human
 {
@@ -22,6 +23,7 @@ public:
 	//_____________________________________________//
 	void set_last_name(const std::string& last_name)
 	{
+		//std::regex exp ("\\w");
 		this->last_name = last_name;
 	}
 	void set_first_name(const std::string& first_name)
@@ -30,10 +32,6 @@ public:
 	}
 	void set_age(unsigned int age)
 	{
-		//if (age <=80)
-		//{
-
-		//}
 		this->age = age;
 	}
 	//Constructor
@@ -44,7 +42,7 @@ public:
 		set_age(age);
 		std::cout << "HConstructor:\t" << this << std::endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		std::cout << "HDestructor:\t" << this << std::endl;
 	}
@@ -233,8 +231,8 @@ public:
 };
 
 //#define SET_ACCADEMY
-#define SET_GROUP
-void main() 
+//#define POLIMORPHISM
+void main()
 {
 	setlocale(LC_ALL, "");
 #ifdef SET_ACCADEMY
@@ -263,10 +261,10 @@ void main()
 		group2[i]->print();
 	}
 #endif // SET_ACCADEMY
-#ifdef SET_GROUP
+#ifdef POLIMORPHISM
 	Human* group[] =
 	{
-		new Student("Ковальчук", "Антон", 15, "РПО", "СТ ПВ 35", 95, 100),
+		new Student("Ковальчук23", "Антон??", 15, "РПО", "СТ ПВ 35", 95, 100),
 		new Student("Кравцов", "Артем", 15, "РПО", "СТ ПВ 35", 85, 97),
 		new Teacher("Кобылинский", "Андрей", 42, "Hardware & Windows", 5, 0),
 		new Student("Горбенко", "Богдан", 16, "РПО", "СТ ПВ 35", 99, 100),
@@ -274,12 +272,22 @@ void main()
 		new Teacher("Котун", "Олег", 35, "С++", 5, 32),
 		new Graduate("Колач", "Геннадий", 21, "РПО", "СТ ПВ 35", 96, 100, "Разработка игр для Android", "Someone")
 	};
-	
+
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
 		std::cout << "--------------------------------------------------------------------------------\n";
 		group[i]->print();
 	}
 
-#endif // SET_GROUP
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
+	}
+#endif // POLIMORPHISM
+
+	std::string name;
+	std::cout << " Input name: "; std::cin >> name;
+	std::regex rgx("[A-Z][a-z]{1,10}");
+	std::cout << std::regex_match(name, rgx, std::regex_constants::match_default) << std::endl;
+
 }
