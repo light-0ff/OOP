@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<regex>
+#include<Windows.h>
 
 class Human
 {
@@ -25,6 +26,8 @@ public:
 	{
 		//std::regex exp ("\\w");
 		this->last_name = last_name;
+		//std::wregex rgx_eng(L"[A-Z][a-z]{1,10}");
+		//std::regex_match(last_name, rgx_eng, std::regex_constants::match_default) == true ? this->last_name :this->last_name;
 	}
 	void set_first_name(const std::string& first_name)
 	{
@@ -232,9 +235,11 @@ public:
 
 //#define SET_ACCADEMY
 //#define POLIMORPHISM
+//#define REGEX_TEST
+#define REGEX_GROUP
 void main()
 {
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, ".OCP");
 #ifdef SET_ACCADEMY
 	Human human("Òóïåíêî", "Âàñûëü", 18);
 	//human.print();
@@ -284,10 +289,28 @@ void main()
 		delete group[i];
 	}
 #endif // POLIMORPHISM
-
+#ifdef REGEX_TEST
 	std::string name;
-	std::cout << " Input name: "; std::cin >> name;
+	std::cout << " Input name: "; /*std::cin >> name;*/ getline(std::cin, name);
 	std::regex rgx("[A-Z][a-z]{1,10}");
 	std::cout << std::regex_match(name, rgx, std::regex_constants::match_default) << std::endl;
+	/*std::regex rgx_ru("[À-ß]{1}[à-ÿ]{10}");
+	std::regex rgx_eng("[A-Z][a-z]{1,10}");
+	std::regex_match(name,  rgx_ru,  std::regex_constants::match_default) == true ? std::cout<<"11111" : std::cout << "22222";*/
+#endif // TEST
+#ifdef REGEX_GROUP
+	std::wstring group;
+	std::cout << " Input group: "; 
+	/*std::cin >> group;*/	getline(std::wcin, group);
+	std::wcout << group << std::endl;
+	//std::wregex rgx_ru(L"(ÑÒ|ÏÑ)(_| )(ÏÓ|ÏÂ|ÈÒÓ|ÈÒÂ|ÄÓ|ÄÂ)(_| )\\d{2}|\\d[àáâ]");
+	std::wregex rgx_eng(L"(ST|PS(_| )(SB|VS))[_ \-](PU|PV|ITU|ITV|DU|DV)[_ \-]\\d{2}[abc]?");
+	//std::wcout << std::regex_match(group, rgx_ru, std::regex_constants::match_default) << std::endl;
+	std::wregex rgx_replace(L" |\-");
+	group = std::regex_replace(group, rgx_replace, L"_", std::regex_constants::match_default);
+	std::wcout << std::regex_match(group, rgx_eng, std::regex_constants::match_default) << std::endl;
+	std::wcout << group << std::endl;
+
+#endif // REGEX_GROUP
 
 }
