@@ -236,10 +236,14 @@ public:
 //#define SET_ACCADEMY
 //#define POLIMORPHISM
 //#define REGEX_TEST
-#define REGEX_GROUP
+//#define REGEX_GROUP
+//#define REGEX_MAIL 
+//#define REGEX_PHONE
+#define CONVERT_PHONE
 void main()
 {
-	setlocale(LC_ALL, ".OCP");
+	//setlocale(LC_ALL, ".OCP");
+	setlocale(LC_ALL, "");
 #ifdef SET_ACCADEMY
 	Human human("Тупенко", "Васыль", 18);
 	//human.print();
@@ -290,13 +294,11 @@ void main()
 	}
 #endif // POLIMORPHISM
 #ifdef REGEX_TEST
+	//--------------здесь нужен setlocale(LC_ALL, ".OCP");
 	std::string name;
 	std::cout << " Input name: "; /*std::cin >> name;*/ getline(std::cin, name);
 	std::regex rgx("[A-Z][a-z]{1,10}");
 	std::cout << std::regex_match(name, rgx, std::regex_constants::match_default) << std::endl;
-	/*std::regex rgx_ru("[А-Я]{1}[а-я]{10}");
-	std::regex rgx_eng("[A-Z][a-z]{1,10}");
-	std::regex_match(name,  rgx_ru,  std::regex_constants::match_default) == true ? std::cout<<"11111" : std::cout << "22222";*/
 #endif // TEST
 #ifdef REGEX_GROUP
 	std::wstring group;
@@ -312,5 +314,37 @@ void main()
 	std::wcout << group << std::endl;
 
 #endif // REGEX_GROUP
+#ifdef REGEX_MAIL
+	std::string email = "vasya@gmail.com";
+	//std::string email;
+	//std::cout << " Input E-mail: ";
+	//getline(std::cin, email);
+	std::cout << email << std::endl;
+	std::regex rgx_mail("\\w{3,20}@[a-z]{1,10}[.][a-z]{2,4}(.[a-z]{2})?");
+	std::cout << std::regex_match(email, rgx_mail, std::regex_constants::match_default) << std::endl;
+
+#endif // REGEX_MAIL
+#ifdef REGEX_PHONE
+	std::string phone = "+38(099)123-45-67";
+	//std::regex rgx_phone ("\\+\\d{2}\\(\\d{3}\\)\\d{3}(-\\d{2}){2}");
+	std::regex rgx_phone (R"(\+\d{2}\(\d{3}\)\d{3}(-\d{2}){2})");
+	//std::cout << (R"(\\+\\d{2}\\(\\d{3}\\)\\d{3}(-\\d{2}){2})") << std::endl;
+	std::cout << std::regex_match(phone, rgx_phone, std::regex_constants::match_default) << std::endl;
+#endif // REGEX_PHONE
+#ifdef CONVERT_PHONE
+	std::string phone = "380991234567";
+	std::regex rgx("\\d{12}");
+	
+	if (std::regex_match(phone, rgx, std::regex_constants::match_default))
+	{
+		phone.insert(0, "+");
+		phone.insert(phone.size() - 10, "(");
+		phone.insert(phone.size() - 7, ")");
+		phone.insert(phone.size() - 4, "-");
+		phone.insert(phone.size() - 2, "-");
+	}
+	std::cout << phone << std::endl;
+#endif // CONVERT_PHONE
+
 
 }
