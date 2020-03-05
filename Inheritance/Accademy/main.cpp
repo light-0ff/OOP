@@ -1,13 +1,13 @@
 #include"Accademi.h"
-
+//#include"Academy.cpp"
 
 //#define SET_ACCADEMY
-//#define POLIMORPHISM
+#define POLIMORPHISM
 //#define REGEX_TEST
 //#define REGEX_GROUP
 //#define REGEX_MAIL 
 //#define REGEX_PHONE
-#define CONVERT_PHONE
+//#define CONVERT_PHONE
 void main()
 {
 	//setlocale(LC_ALL, ".OCP");
