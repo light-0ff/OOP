@@ -1,6 +1,6 @@
 #include<iostream>
 
-#define Delimeter "\n_________________________\n"
+#define Delimiter "\n_________________________\n"
 // static . -> (:: - Scope operator)
 class Element
 {
@@ -8,7 +8,7 @@ class Element
 	Element* pNext;	//јдресс следующего елемента
 	static int count;	// подсчет елементов списка
 public:
-	Element(int Data, Element* pNext = nullptr):Data(Data), pNext(pNext)
+	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
 		std::cout << "EConstructor:\t" << this << std::endl;
@@ -28,6 +28,10 @@ class ForwardList
 	Element* Head;
 	unsigned int Size;
 public:
+	unsigned int get_size()const
+	{
+		return Size;
+	}
 	ForwardList()
 	{
 		Head = nullptr; //≈сли список пуст, то его голова указывает на 0.
@@ -40,7 +44,14 @@ public:
 		//{
 		//	push_front(rand() % 200);
 		//}
-		while(size--)push_front(rand() % 200);
+		while (size--)push_front(0);
+	}
+	ForwardList(const std::initializer_list<int>& il) :ForwardList()
+	{
+		for (const int* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
 	}
 	~ForwardList()
 	{
@@ -48,13 +59,22 @@ public:
 		std::cout << "FLDestructor:\t" << this << std::endl;
 	}
 
+	//		Operators
+	int& operator[](int index)
+	{
+		Element* Temp = Head;		// »тератор
+		for (int i = 0; i < index; i++) Temp = Temp->pNext;
+		return Temp->Data;
+	}
+
 
 	//		Adding elements:
 	void push_front(int Data)
 	{
-		Element* New = new Element(Data);
-		New->pNext = Head;
-		Head = New;
+		//Element* New = new Element(Data);
+		//New->pNext = Head;
+		//Head = New;
+		Head = new Element(Data, Head);
 		Size++;
 	}
 	void push_back(int Data)
@@ -89,9 +109,10 @@ public:
 		{
 			Temp = Temp->pNext;
 		}
-		Element* New = new Element(Data);
-		New->pNext = Temp->pNext;
-		Temp->pNext = New;
+		//Element* New = new Element(Data);
+		//New->pNext = Temp->pNext;
+		//Temp->pNext = New;
+		Temp->pNext = new Element(Data, Temp->pNext);
 		Size++;
 	}
 
@@ -153,8 +174,11 @@ public:
 	}
 };
 
+//#define BASE_FUNCTION_CHECK
 //#define FIRST_LIST
 //#define SECOND_LIST
+//#define CONSTRUCTORS_CHECK_1
+#define CONSTRUCTORS_CHECK_2
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -162,6 +186,7 @@ void main()
 	//Element e(5);
 	int index; 
 	int number;
+#ifdef BASE_FUNCTION_CHECK
 #ifdef FIRST_LIST
 	ForwardList fl;
 
@@ -169,18 +194,18 @@ void main()
 	{
 		fl.push_back(rand() % 200);
 	}
-	std::cout << Delimeter << std::endl;
+	std::cout << Delimiter << std::endl;
 	fl.push_back(1024);
 	fl.print();
 
-	std::cout << Delimeter << "удалить 1й:" << std::endl;
+	std::cout << Delimiter << "удалить 1й:" << std::endl;
 	fl.pop_front();
 	fl.print();
-	std::cout << Delimeter << "удалить последний:" << std::endl;
+	std::cout << Delimiter << "удалить последний:" << std::endl;
 	fl.pop_back();
 	fl.print();
 
-	std::cout << Delimeter << "¬ведите индекс (дл€ добавлени€)" << std::endl;
+	std::cout << Delimiter << "¬ведите индекс (дл€ добавлени€)" << std::endl;
 	std::cin >> index;
 	std::cout << "¬ведите значение:"; std::cin >> number;
 	fl.insert(index, number);
@@ -200,20 +225,23 @@ void main()
 	fl2.push_back(13);
 	fl2.print();
 
-	std::cout << Delimeter << "¬ведите индекс (дл€ удалени€)" << std::endl;
+	std::cout << Delimiter << "¬ведите индекс (дл€ удалени€)" << std::endl;
 	std::cin >> index;
 	fl2.erase(index);
 	fl2.print();
 
 #endif // SECOND_LIST
 
-
-	std::cout << Delimeter << "¬ведите размер списка" << std::endl;
+	std::cout << Delimiter << "¬ведите размер списка" << std::endl;
 	std::cin >> number;
 	ForwardList fl3(number);
 	fl3.print();
 
-	
+	std::cout << Delimiter << "¬ведите индекс: " << std::endl;
+	std::cin >> index;
+	std::cout << "¬ведите значение:"; std::cin >> number;
+	fl3.insert(index, number);
+	fl3.print();
 	//try
 	//{
 	//	std::cout << "input index" << std::endl; std::cin >> index;
@@ -229,6 +257,37 @@ void main()
 	//	*/
 	//	std::cerr << e.what() << std::endl;
 	//}
+
+#endif // BASE_FUNCTION_CHECK
+#ifdef CONSTRUCTORS_CHECK_1
+	std::cout << Delimiter << "¬ведите размер: " ;
+	std::cin >> index;
+	ForwardList fl(index);
+	fl.print();
+	fl.push_back(3);
+	fl.push_back(5);
+	fl.push_back(8);
+	fl.push_back(13);
+	fl.print();
+	for (int i = 0; i < fl.get_size(); i++)
+	{
+		fl[i] =rand() % 100;
+	}
+	for (int i = 0; i < fl.get_size(); i++)
+	{
+		std::cout << fl[i] << "\t";
+	}
+	std::cout << std::endl;
+
+#endif // CONSTRUCTORS_CHECK
+#ifdef CONSTRUCTORS_CHECK_2
+	ForwardList list = { 3, 5, 8, 13, 21 };
+	list.print();
+	for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
+	std::cout << std::endl;
+
+#endif // CONSTRUCTORS_CHECK_2
+
 
 
 
