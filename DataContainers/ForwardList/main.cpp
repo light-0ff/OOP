@@ -34,10 +34,20 @@ public:
 		Size = 0;
 		std::cout << "FLConstructor:\t" << this << std::endl;
 	}
+	ForwardList(int size) :ForwardList()
+	{
+		//for (int i = 0; i < size; i++)
+		//{
+		//	push_front(rand() % 200);
+		//}
+		while(size--)push_front(rand() % 200);
+	}
 	~ForwardList()
 	{
+		while (Head) pop_front();
 		std::cout << "FLDestructor:\t" << this << std::endl;
 	}
+
 
 	//		Adding elements:
 	void push_front(int Data)
@@ -66,7 +76,7 @@ public:
 	{
 		if (index > Size)
 		{
-			std::cout << "\t Error: out of ramge" << std::endl;
+			throw std::exception("Error: out of ramge");
 			return;
 		}
 		if (index == 0)
@@ -106,13 +116,27 @@ public:
 	}
 	void erase(int index)
 	{
-		Element* Temp = Head;
-		for (int i = 0; i < index - 1; i++)
+		if (index >= this->Size)
 		{
-			Temp = Temp->pNext;
+			throw std::exception("Error: out of ramge when erasing");
+			return;
 		}
-		delete Temp;
-		Temp = Temp->pNext;
+		if (index <= 0)
+		{
+			pop_front();
+			return;
+		}
+		//if (index == Size - 1)
+		//{
+		//	pop_back();
+		//	return;
+		//}
+		Element* Temp = Head;
+		for (int i = 0; i < index - 1; i++)	Temp = Temp->pNext;
+		
+		Element* buffer = Temp->pNext;	//save addres of deleted element
+		Temp->pNext = Temp->pNext->pNext;	//exclude deleted element from list
+		delete buffer;		//remove element from memory
 		Size--;
 	}
 
@@ -129,15 +153,17 @@ public:
 	}
 };
 
-
+//#define FIRST_LIST
+//#define SECOND_LIST
 void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
-	std::cout << "input size: "; std::cin >> n;
 	//Element e(5);
-	ForwardList fl;
 	int index; 
+	int number;
+#ifdef FIRST_LIST
+	ForwardList fl;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -156,21 +182,56 @@ void main()
 
 	std::cout << Delimeter << "¬ведите индекс (дл€ добавлени€)" << std::endl;
 	std::cin >> index;
-	int number;
 	std::cout << "¬ведите значение:"; std::cin >> number;
 	fl.insert(index, number);
 	fl.print();
 
+	std::cout << "input size: "; std::cin >> n;
+#endif // FIRST_LIST
+
 	//std::cout << Delimeter << "¬ведите индекс (дл€ удалени€)" << std::endl;
 	//fl.erase(index);
 	//fl.print();
-
+#ifdef SECOND_LIST
 	ForwardList fl2;
 	fl2.push_back(3);
 	fl2.push_back(5);
 	fl2.push_back(8);
 	fl2.push_back(13);
 	fl2.print();
+
+	std::cout << Delimeter << "¬ведите индекс (дл€ удалени€)" << std::endl;
+	std::cin >> index;
+	fl2.erase(index);
+	fl2.print();
+
+#endif // SECOND_LIST
+
+
+	std::cout << Delimeter << "¬ведите размер списка" << std::endl;
+	std::cin >> number;
+	ForwardList fl3(number);
+	fl3.print();
+
+	
+	//try
+	//{
+	//	std::cout << "input index" << std::endl; std::cin >> index;
+	//	fl3.erase(index);
+	//	fl3.print();
+	//}
+	//catch (const std::exception& e)
+	//{
+	//	/*
+	//	cin  - Console input
+	//	cout - Console output
+	//	cerr - Console Error
+	//	*/
+	//	std::cerr << e.what() << std::endl;
+	//}
+
+
+
 	////как нужно удал€ть
 	//int* pa = new int(2);
 	//delete pa;
