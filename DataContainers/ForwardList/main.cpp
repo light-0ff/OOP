@@ -61,6 +61,15 @@ public:
 		}
 		std::cout << "FLCopyConstructor: " << this << std::endl;
 	}
+	ForwardList& operator= (ForwardList && other)
+	{
+		delete Head;
+		// добавить переход от Head к следующему елементу(?)
+		this->Head = other.Head;
+		other.Head = nullptr;
+		std::cout << std::endl << "--------------------- " << "Move assignment\t" << this << std::endl;
+		return *this;
+	}
 	~ForwardList()
 	{
 		while (Head) pop_front();
@@ -68,6 +77,14 @@ public:
 	}
 
 	//		Operators
+	//ForwardList& operator=(const ForwardList& other):ForwardList(other.Size)
+	//{
+	//	for (int i = 0; i < Size; i++)
+	//	{
+	//		this->Head[i] = other.Head[i];
+	//	}
+	//	std::cout << "FLCopyConstructor: " << this << std::endl;
+	//}
 	const int& operator[](int index)const
 	{
 		Element* Temp = Head;		// Итератор
@@ -193,16 +210,17 @@ ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 	}												 //
 	//////////////////////////////////////////////////
 
+	//	Добавляем в конец right список
 	for (int i = 0; i < right.get_size(); i++)
 	{
 		New.push_back(right[i]);
 	}
-	////////  	Добавляем в конец right список	   ////////
-	for (int i = 0; i < New.get_size(); i++)			//
-	{												   //
-		std::cout << New[i] << "\t";				  //
-	}												 //
-	//////////////////////////////////////////////////
+	//////////  			Вывод				///////
+	//for (int i = 0; i < New.get_size(); i++)	//
+	//{										   //
+	//	std::cout << New[i] << "\t";		  //
+	//}										 //
+	////////////////////////////////////////////
 	return New;
 }
 
@@ -320,8 +338,12 @@ void main()
 	
 	std::cout << Delimiter << std::endl;
 	ForwardList list2 = { 1, 2, 3, 4, 5 };
+	std::cout << Delimiter << std::endl;
+	std::cout << Delimiter << std::endl;
 	ForwardList list3 = list + list2;
+	std::cout << Delimiter << std::endl;
 	list3.print();
+	std::cout << Delimiter << std::endl;
 	std::cout << Delimiter << std::endl;
 
 #endif // CONSTRUCTORS_CHECK_2
