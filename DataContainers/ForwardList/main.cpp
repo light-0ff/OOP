@@ -53,6 +53,14 @@ public:
 			push_back(*it);
 		}
 	}
+	ForwardList(const ForwardList& other) :ForwardList(other.Size)
+	{
+		for (int i = 0; i < Size; i++)
+		{
+			this->Head[i] = other.Head[i];
+		}
+		std::cout << "FLCopyConstructor: " << this << std::endl;
+	}
 	~ForwardList()
 	{
 		while (Head) pop_front();
@@ -60,14 +68,19 @@ public:
 	}
 
 	//		Operators
+	const int& operator[](int index)const
+	{
+		Element* Temp = Head;		// Итератор
+		for (int i = 0; i < index; i++) Temp = Temp->pNext;
+		return Temp->Data;
+	}
 	int& operator[](int index)
 	{
 		Element* Temp = Head;		// Итератор
 		for (int i = 0; i < index; i++) Temp = Temp->pNext;
 		return Temp->Data;
 	}
-
-
+	
 	//		Adding elements:
 	void push_front(int Data)
 	{
@@ -147,14 +160,8 @@ public:
 			pop_front();
 			return;
 		}
-		//if (index == Size - 1)
-		//{
-		//	pop_back();
-		//	return;
-		//}
 		Element* Temp = Head;
 		for (int i = 0; i < index - 1; i++)	Temp = Temp->pNext;
-		
 		Element* buffer = Temp->pNext;	//save addres of deleted element
 		Temp->pNext = Temp->pNext->pNext;	//exclude deleted element from list
 		delete buffer;		//remove element from memory
@@ -173,6 +180,31 @@ public:
 		std::cout << "List size: " << Size << " elements.\n";
 	}
 };
+
+ForwardList operator+(const ForwardList& left, const  ForwardList& right)
+{
+	//ForwardList New = left;	// Вариант CopyConstructor
+
+	////////		Временнй вариант		////////////////
+	ForwardList New;									 //
+	for (int i = 0; i < left.get_size(); i++)			//
+	{												   //
+		New.push_back(left[i]);						  //
+	}												 //
+	//////////////////////////////////////////////////
+
+	for (int i = 0; i < right.get_size(); i++)
+	{
+		New.push_back(right[i]);
+	}
+	////////  	Добавляем в конец right список	   ////////
+	for (int i = 0; i < New.get_size(); i++)			//
+	{												   //
+		std::cout << New[i] << "\t";				  //
+	}												 //
+	//////////////////////////////////////////////////
+	return New;
+}
 
 //#define BASE_FUNCTION_CHECK
 //#define FIRST_LIST
@@ -271,7 +303,7 @@ void main()
 	fl.print();
 	for (int i = 0; i < fl.get_size(); i++)
 	{
-		fl[i] =rand() % 100;
+		fl[i] = rand() % 100;
 	}
 	for (int i = 0; i < fl.get_size(); i++)
 	{
@@ -283,8 +315,14 @@ void main()
 #ifdef CONSTRUCTORS_CHECK_2
 	ForwardList list = { 3, 5, 8, 13, 21 };
 	list.print();
-	for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
+	//for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
 	std::cout << std::endl;
+	
+	std::cout << Delimiter << std::endl;
+	ForwardList list2 = { 1, 2, 3, 4, 5 };
+	ForwardList list3 = list + list2;
+	list3.print();
+	std::cout << Delimiter << std::endl;
 
 #endif // CONSTRUCTORS_CHECK_2
 
