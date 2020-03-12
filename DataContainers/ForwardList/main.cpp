@@ -67,7 +67,14 @@ public:
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext) push_back(Temp->Data);
 		std::cout << "FLCopyConstructor: " << this << std::endl;
 	}
-
+	ForwardList(ForwardList&& other)
+	{
+		this->Head = other.Head;
+		this->Size = other.Size;
+		other.Head = nullptr;
+		std::cout << "FLMoveConstructor: " << this << std::endl;
+	}
+	
 	~ForwardList()
 	{
 		while (Head) pop_front();
@@ -75,6 +82,14 @@ public:
 	}
 
 	//		Operators
+	ForwardList& operator=(ForwardList&& other)
+	{
+		this->Head = other.Head;
+		this->Size = other.Size;
+		other.Head = nullptr;
+		std::cout << "FLMoveAssignment: " << this << std::endl;
+		return *this;
+	}
 	ForwardList& operator=(const ForwardList& other)
 	{
 		while (Head)pop_front();
@@ -330,13 +345,10 @@ void main()
 	ForwardList list = { 3, 5, 8, 13, 21 };
 	list.print();
 	//for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
-	ForwardList list2 = list;	// CopyConstruct
+	ForwardList list2 = {34, 55, 89};	
 	list2.print();
 	ForwardList list3;
-	list3 = list;				// CopyAssignment
-	list3.print();
-	
-	list3 = list2 + list;
+	list3 = list + list2;
 	list3.print();
 
 	//std::cout << Delimiter << std::endl;
