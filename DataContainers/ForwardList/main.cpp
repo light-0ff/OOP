@@ -8,6 +8,14 @@ class Element
 	Element* pNext;	//Адресс следующего елемента
 	static int count;	// подсчет елементов списка
 public:
+	const int getData()const
+	{
+		return Data;
+	}
+	const Element* getpNext()const
+	{
+		return pNext;
+	}
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
@@ -28,6 +36,10 @@ class ForwardList
 	Element* Head;
 	unsigned int Size;
 public:
+	const Element* get_head()const
+	{
+		return Head;
+	}
 	unsigned int get_size()const
 	{
 		return Size;
@@ -40,10 +52,7 @@ public:
 	}
 	ForwardList(int size) :ForwardList()
 	{
-		//for (int i = 0; i < size; i++)
-		//{
-		//	push_front(rand() % 200);
-		//}
+		//for (int i = 0; i < size; i++) push_front(rand() % 200);
 		while (size--)push_front(0);
 	}
 	ForwardList(const std::initializer_list<int>& il) :ForwardList()
@@ -53,23 +62,12 @@ public:
 			push_back(*it);
 		}
 	}
-	ForwardList(const ForwardList& other) :ForwardList(other.Size)
+	ForwardList(const ForwardList& other) :ForwardList()
 	{
-		for (int i = 0; i < Size; i++)
-		{
-			this->Head[i] = other.Head[i];
-		}
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext) push_back(Temp->Data);
 		std::cout << "FLCopyConstructor: " << this << std::endl;
 	}
-	ForwardList& operator= (ForwardList && other)
-	{
-		delete Head;
-		// добавить переход от Head к следующему елементу(?)
-		this->Head = other.Head;
-		other.Head = nullptr;
-		std::cout << std::endl << "--------------------- " << "Move assignment\t" << this << std::endl;
-		return *this;
-	}
+
 	~ForwardList()
 	{
 		while (Head) pop_front();
@@ -77,14 +75,13 @@ public:
 	}
 
 	//		Operators
-	//ForwardList& operator=(const ForwardList& other):ForwardList(other.Size)
-	//{
-	//	for (int i = 0; i < Size; i++)
-	//	{
-	//		this->Head[i] = other.Head[i];
-	//	}
-	//	std::cout << "FLCopyConstructor: " << this << std::endl;
-	//}
+	ForwardList& operator=(const ForwardList& other)
+	{
+		while (Head)pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext) push_back(Temp->Data);
+		std::cout << std::endl << "FLCopyAssignment\t" << this << std::endl;
+		return *this;
+	}
 	const int& operator[](int index)const
 	{
 		Element* Temp = Head;		// Итератор
@@ -198,32 +195,31 @@ public:
 	}
 };
 
+/*
 ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 {
-	//ForwardList New = left;	// Вариант CopyConstructor
-
-	////////		Временнй вариант		////////////////
-	ForwardList New;									 //
-	for (int i = 0; i < left.get_size(); i++)			//
-	{												   //
-		New.push_back(left[i]);						  //
-	}												 //
-	//////////////////////////////////////////////////
+	ForwardList New = left;	// Вариант CopyConstructor
+		
+					// ||	|  |	 |  |
+	//////////		Временнй вариант		////////////////
+	//ForwardList New;									 //
+	//for (int i = 0; i < left.get_size(); i++)			//
+	//{												   //
+	//	New.push_back(left[i]);						  //
+	//}												 //
+	////////////////////////////////////////////////////
 
 	//	Добавляем в конец right список
-	for (int i = 0; i < right.get_size(); i++)
-	{
-		New.push_back(right[i]);
-	}
-	//////////  			Вывод				///////
-	//for (int i = 0; i < New.get_size(); i++)	//
-	//{										   //
-	//	std::cout << New[i] << "\t";		  //
-	//}										 //
-	////////////////////////////////////////////
+	for (int i = 0; i < right.get_size(); i++)	New.push_back(right[i]);
 	return New;
+} */
+ForwardList operator+(const ForwardList& left, const  ForwardList& right)
+{
+	ForwardList buffer = left;	// Вариант CopyConstructor
+	for (const Element* Temp = right.get_head(); Temp != nullptr; Temp = Temp->getpNext()) 
+	{ buffer.push_back(Temp->getData()); }
+	return buffer;
 }
-
 //#define BASE_FUNCTION_CHECK
 //#define FIRST_LIST
 //#define SECOND_LIST
@@ -334,17 +330,25 @@ void main()
 	ForwardList list = { 3, 5, 8, 13, 21 };
 	list.print();
 	//for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
-	std::cout << std::endl;
-	
-	std::cout << Delimiter << std::endl;
-	ForwardList list2 = { 1, 2, 3, 4, 5 };
-	std::cout << Delimiter << std::endl;
-	std::cout << Delimiter << std::endl;
-	ForwardList list3 = list + list2;
-	std::cout << Delimiter << std::endl;
+	ForwardList list2 = list;	// CopyConstruct
+	list2.print();
+	ForwardList list3;
+	list3 = list;				// CopyAssignment
 	list3.print();
-	std::cout << Delimiter << std::endl;
-	std::cout << Delimiter << std::endl;
+	
+	list3 = list2 + list;
+	list3.print();
+
+	//std::cout << Delimiter << std::endl;
+	//ForwardList list2 = { 1, 2, 3, 4, 5 };
+	//std::cout << Delimiter << std::endl;
+	//std::cout << Delimiter << std::endl;
+	//ForwardList list3 = list + list2;
+	//std::cout << Delimiter << std::endl;
+	//list3.print();
+	//std::cout << Delimiter << std::endl;
+	//std::cout << Delimiter << std::endl;
+
 
 #endif // CONSTRUCTORS_CHECK_2
 
