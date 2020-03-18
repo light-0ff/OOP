@@ -51,6 +51,12 @@ public:
 		Temp = Temp->pNext;
 		return *this;
 	}
+	Iterator& operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
 
 	bool operator==(const Iterator& other)
 	{
@@ -104,7 +110,7 @@ public:
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext) push_back(Temp->Data);*/
-		for (Iterator Temp = other.Head; Temp != nullptr; ++Temp)
+		for (Iterator Temp = other.Head; Temp != nullptr; Temp++)
 			push_back(*Temp);
 			//перегрузи (!=)
 		std::cout << "FLCopyConstructor: " << this << std::endl;
@@ -394,7 +400,7 @@ void main()
 	ForwardList list3;
 	list3 = list + list2;
 	list3.print();
-	for ( Iterator it = list3.get_head(); it != Iterator(nullptr); ++it)
+	for ( Iterator it = list3.get_head(); it != Iterator(nullptr); it++)
 	{
 		std::cout << *it << "\t";
 	}
