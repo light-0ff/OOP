@@ -66,10 +66,7 @@ public:
 			return;
 		}
 		Element* Temp = head;
-		for (int i = 0; i < index - 1; i++)
-		{
-			Temp = Temp->pNext;
-		}
+		for (int i = 0; i < index - 1; i++)	Temp = Temp->pNext;
 		Temp = Temp->pNext = Temp->pNext->pPrev = new Element(data, Temp->pNext, Temp);
 		//Temp->pNext->pPrev = Temp; //записывает адресс нового елемента в следующий елемент
 	}
@@ -88,6 +85,25 @@ public:
 		tail = buffer = nullptr;
 		delete buffer;
 		size--;
+	}
+	void erase(int index)
+	{
+		if (index >= this->size)
+		{	throw std::exception("Error: out of ramge when erasing");
+			return;
+		}
+		if (index <= 0)
+		{	pop_front();
+			return;
+		}
+		Element* Temp = head;
+		for (int i = 0; i < index - 1; i++)	Temp = Temp->pNext;
+		Element* buffer = Temp->pNext;		//save addres of deleted element
+		Temp->pNext = Temp->pNext->pNext;	//exclude deleted element from list
+		Temp->pNext->pPrev = Temp->pNext->pPrev->pPrev;
+		delete buffer;
+		size--;
+
 	}
 	//		Methods:
 	void print()
@@ -121,11 +137,11 @@ void main()
 	list.print();
 	std::cout << Delimiter;
 	//list.push_back(999);		// ƒобавить в конец
-	//std::cout << "Input index: "; std::cin >> index;
+	std::cout << "Input index: "; std::cin >> index;
 	//list.insert(index, 2222);	// ƒобавить по индексу
 	/* std::cout << "Input nomber: "; std::cin >> n;
 	list.insert(index, n);	*/	
-	list.pop_back();
+	list.erase(index);
 	list.print();
 	list.print_reverse();
 }
