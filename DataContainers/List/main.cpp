@@ -45,8 +45,50 @@ public:
 		head = head->pPrev = new Element(data, head);
 		size++;
 	}
+	void push_back(int data)
+	{
+		if (head == nullptr)
+		{
+			push_front(data);
+			return;
+		}
+		tail = tail->pNext = new Element(data, tail->pNext, tail);
+		size++;
+	}
+	void insert(int index, int data)
+	{
+		if (index > size)
+		{	throw std::exception("Error: out of ramge");
+			return;
+		}
+		if (index == 0)
+		{	push_front(data);
+			return;
+		}
+		Element* Temp = head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			Temp = Temp->pNext;
+		}
+		Temp = Temp->pNext = Temp->pNext->pPrev = new Element(data, Temp->pNext, Temp);
+		//Temp->pNext->pPrev = Temp; //записывает адресс нового елемента в следующий елемент
+	}
 	//		Removing elements
-
+	void pop_front()
+	{
+		Element* buffer = head;
+		head = head->pNext;
+		head->pPrev = nullptr;
+		delete buffer;
+		size--;
+	}
+	void pop_back()
+	{
+		Element* buffer = tail;
+		tail = buffer = nullptr;
+		delete buffer;
+		size--;
+	}
 	//		Methods:
 	void print()
 	{
@@ -69,6 +111,7 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
+	int index;
 	std::cout << "Input size: "; std::cin >> n;
 	List list;
 	for (int i = 0; i < n; i++)
@@ -76,6 +119,13 @@ void main()
 		list.push_front(rand() % 100);
 	}
 	list.print();
+	std::cout << Delimiter;
+	//list.push_back(999);		// ƒобавить в конец
+	//std::cout << "Input index: "; std::cin >> index;
+	//list.insert(index, 2222);	// ƒобавить по индексу
+	/* std::cout << "Input nomber: "; std::cin >> n;
+	list.insert(index, n);	*/	
+	list.pop_back();
+	list.print();
 	list.print_reverse();
-
 }
