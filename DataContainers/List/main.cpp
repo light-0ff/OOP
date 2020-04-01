@@ -32,15 +32,11 @@ public:
 		Iterator(Element* Temp)
 		{
 			this->Temp = Temp;
-#ifdef DEBUG
-			std::cout << "ItConstructor:\t" << this << std::endl;
-#endif // DEBUG
+			//std::cout << "ItConstructor:\t" << this << std::endl;
 		}
 		~Iterator()
 		{
-#ifdef DEBUG
-			std::cout << "ItDestructor:\t" << this << std::endl;
-#endif //DEBUG
+			//std::cout << "ItDestructor:\t" << this << std::endl;
 		}
 
 		//		Operators:
@@ -84,11 +80,11 @@ public:
 
 	const Iterator end()const
 	{
-		return this->head;
+		return nullptr;
 	}
 	Iterator end()
 	{
-		return tail->pNext;
+		return nullptr;
 	}
 	//////////////////////////////////////////////////////////
 	class ReverseIterator
@@ -141,7 +137,7 @@ public:
 	}
 	const ReverseIterator rend()const
 	{
-		return head->pPrev;
+		return nullptr;
 	}
 
 	///////////////////////////////////////////////////////
@@ -190,7 +186,6 @@ public:
 		std::cout << "LDestructor:\t" << this << std::endl;
 	}
 
-
 	//		Operators:
 	List& operator=(List&& other)
 	{
@@ -213,15 +208,6 @@ public:
 		std::cout << std::endl << "LCopyAssignment\t" << this << std::endl;
 		return *this;
 	}
-	//List operator+(const List& other)const
-	//{
-	//	List buffer = *this;
-	//	for (const Element* Temp = other.head; Temp; Temp++)
-	//	{
-	//		buffer.push_back(Temp->data);
-	//	}
-	//	return buffer;
-	//}
 
 	//		Adding elements
 	void push_front(int data)
@@ -269,6 +255,7 @@ public:
 		//Temp = Temp->pNext = Temp->pNext->pPrev = new Element(data, Temp->pNext, Temp);		//Temp->pNext->pPrev = Temp; //записывает адресс нового елемента в следующий елемент
 		size++;
 	}
+
 	//		Removing elements
 	void pop_front()
 	{
@@ -328,6 +315,7 @@ public:
 		delete Temp;
 		size--;
 	}
+
 	//		Methods:
 	void print()
 	{
