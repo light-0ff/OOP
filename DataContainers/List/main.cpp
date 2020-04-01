@@ -49,29 +49,24 @@ public:
 			Temp = Temp->pNext;
 			return *this;
 		}
-
 		Iterator operator++(int)
 		{
 			Iterator old = *this;
 			Temp = Temp->pNext;
 			return old;
 		}
-
 		const int& operator*()const
 		{
 			return Temp->data;
 		}
-
 		int& operator*()
 		{
 			return Temp->data;
 		}
-
 		bool operator==(const Iterator& other)const
 		{
 			return this->Temp == other.Temp;
 		}
-
 		bool operator!=(const Iterator& other)const
 		{
 			return this->Temp != other.Temp;
@@ -89,13 +84,67 @@ public:
 
 	const Iterator end()const
 	{
-		return nullptr;
+		return this->head;
 	}
 	Iterator end()
 	{
-		return nullptr;
+		return tail->pNext;
+	}
+	//////////////////////////////////////////////////////////
+	class ReverseIterator
+	{
+		Element* Temp;
+	public:
+		ReverseIterator(Element* Temp)
+		{
+			this->Temp = Temp;
+			//std::cout << "RConstructor:\t" << this << std::endl;
+		}
+		~ReverseIterator()
+		{
+
+		}
+		
+		//		Operators
+		ReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ReverseIterator& operator++(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		const int& operator*()const
+		{
+			return Temp->data;
+		}
+		int& operator*()
+		{
+			return Temp->data;
+		}
+
+		bool operator==(const ReverseIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const ReverseIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+	};
+	const ReverseIterator rbegin()const
+	{
+		return tail;
+	}
+	const ReverseIterator rend()const
+	{
+		return head->pPrev;
 	}
 
+	///////////////////////////////////////////////////////
 	List()
 	{
 		head = tail = nullptr;
@@ -378,10 +427,10 @@ void main()
 	for (List::Iterator it = list.begin(); it != list.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << Delimiter << std::endl;
-	
+
 	List list2 = { 1, 2, 3 };
 	for (List::Iterator it = list2.begin(); it != list2.end(); it++)	std::cout << *it << "\t";
-	std::cout << Delimiter  << std::endl;
+	std::cout << Delimiter << std::endl;
 
 	for (int i : list + list2)
 	{
@@ -393,5 +442,10 @@ void main()
 	list3 = list + list2;
 	list3.print();
 	//#endif // DEBUG
+	for (List::ReverseIterator rit = list3.rbegin(); rit != list3.rend(); rit++)
+	{
+		std::cout << *rit << "\t";
+	}
+	std::cout << std::endl;
 
 }
