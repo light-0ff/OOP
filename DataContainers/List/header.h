@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<Windows.h>
 
 #define Delimiter "\n__________________________________________________\n"
 
@@ -63,6 +64,6 @@ public:
 	//		Methods:
 	void print();
 	void print_reverse();
-
-
 };
+
+List operator+(const List& left, const List& right);
