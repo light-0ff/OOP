@@ -67,7 +67,60 @@ List::Iterator List::end()
 {
 	return nullptr;
 }
+/////////////////////////////////////////////////////////////////////
+class ReverseIterator
+{
+	List::Element* Temp;
+public:
+	ReverseIterator(List::Element* Temp)
+	{
+		this->Temp = Temp;
+		//std::cout << "RConstructor:\t" << this << std::endl;
+	}
+	~ReverseIterator()
+	{
 
+	}
+
+	//		Operators
+	ReverseIterator& operator++()
+	{
+		Temp = Temp->pPrev;
+		return *this;
+	}
+	ReverseIterator& operator++(int)
+	{
+		ReverseIterator old = *this;
+		Temp = Temp->pPrev;
+		return old;
+	}
+	const int& operator*()const
+	{
+		return Temp->data;
+	}
+	int& operator*()
+	{
+		return Temp->data;
+	}
+
+	bool operator==(const ReverseIterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const ReverseIterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+};
+const ReverseIterator rbegin()const
+{
+	return tail;
+}
+const ReverseIterator rend()const
+{
+	return nullptr;
+}
+//////////////////////////////////////////////////////////////////////////////////
 List::List()
 {
 	head = tail = nullptr;
