@@ -1,16 +1,18 @@
 #include<iostream>
+#include<string>
 
 #define Delimiter "\n__________________________________________________\n"
 
+template<typename T>
 class List
 {
 	class Element
 	{
-		int data;
+		T data;
 		Element* pNext;
 		Element* pPrev;
 	public:
-		Element(int data, Element* pNext = nullptr, Element* pPrev = nullptr) :data(data), pNext(pNext), pPrev(pPrev)
+		Element(T data, Element* pNext = nullptr, Element* pPrev = nullptr) :data(data), pNext(pNext), pPrev(pPrev)
 		{
 			std::cout << "EConstructor:\t" << this << std::endl;
 		}
@@ -51,11 +53,11 @@ public:
 			Temp = Temp->pNext;
 			return old;
 		}
-		const int& operator*()const
+		const T& operator*()const
 		{
 			return Temp->data;
 		}
-		int& operator*()
+		T& operator*()
 		{
 			return Temp->data;
 		}
@@ -113,11 +115,11 @@ public:
 			Temp = Temp->pPrev;
 			return old;
 		}
-		const int& operator*()const
+		const T& operator*()const
 		{
 			return Temp->data;
 		}
-		int& operator*()
+		T& operator*()
 		{
 			return Temp->data;
 		}
@@ -147,19 +149,19 @@ public:
 		size = 0;
 		std::cout << "LConstructor:\t" << this << std::endl;
 	}
-	List(std::initializer_list<int> il) :List()
+	List(std::initializer_list<T> il) :List()
 	{
 		std::cout << typeid(il.begin()).name() << std::endl;
 		/*for (int const* it = il.begin(); it != il.end(); it++)
 		{
 			push_back(*it);
 		}*/
-		for (int i : il)
+		for (T i : il)
 		{
 			push_back(i);
 		}
 	}
-	List(const List& other) :List()
+	List(const List<T>& other) :List()
 	{
 		/*	for (Element* Temp = other.head; Temp; Temp = Temp->pNext)
 			{
@@ -171,7 +173,7 @@ public:
 		}
 		std::cout << "LCopyConstructor:\t" << this << std::endl;
 	}
-	List(List&& other)
+	List(List<T>&& other)
 	{
 		this->head = other.head;
 		this->tail = other.tail;
@@ -187,7 +189,7 @@ public:
 	}
 
 	//		Operators:
-	List& operator=(List&& other)
+	List<T>& operator=(List<T>&& other)
 	{
 		while (head)pop_front();
 		this->head = other.head;
@@ -197,7 +199,7 @@ public:
 		std::cout << "LMoveAssignment: " << this << std::endl;
 		return *this;
 	}
-	List& operator=(const List& other)
+	List<T>& operator=(const List<T>& other)
 	{
 		if (this == &other) return *this;
 		while (head)pop_front();
@@ -210,7 +212,7 @@ public:
 	}
 
 	//		Adding elements
-	void push_front(int data)
+	void push_front(T data)
 	{
 		if (head == nullptr)
 		{
@@ -221,7 +223,7 @@ public:
 		head = head->pPrev = new Element(data, head);
 		size++;
 	}
-	void push_back(int data)
+	void push_back(T data)
 	{
 		if (head == nullptr)
 		{
@@ -233,7 +235,7 @@ public:
 		size++;
 
 	}
-	void insert(int index, int data)
+	void insert(int index, T data)
 	{
 		if (index > size)	throw std::exception("Error: out of ramge");
 		//if (index == 0)
@@ -335,19 +337,23 @@ public:
 	}
 };
 
-List operator+(const List& left, const List& right)
+template<typename T>
+List<T> operator+(const List<T>& left, const List<T>& right)
 {
-	List buffer = left;
-	for (List::Iterator it = right.begin(); it != right.end(); it++)
-	{
-		buffer.push_back(*it);
-	}
+	List<T> buffer = left;
+	//for (List<T>::Iterator it = right.begin(); it != right.end(); it++)
+	//{
+	//	buffer.push_back(*it);
+	//}
+	for (T i : right) buffer.push_back(i);
 	std::cout << "Global operator +" << std::endl;
 	return buffer;
 }
 
 //#define BASE_CHECK
 //#define CONSTRUCTORS_CHECK
+//#define OPERATOR_PLUS_CHECK
+#define TEMPLATE_CHECK
 
 void main()
 {
@@ -392,22 +398,13 @@ void main()
 	list2.print_reverse();
 
 #endif // CONSTRUCTORS_CHECK
-
-	//#ifdef DEBUG
-	int arr[] = { 3, 5, 8, 13, 21 };
+#ifdef OPERATOR_PLUS_CHECK
+	/*int arr[] = { 3, 5, 8, 13, 21 };
 	for (int i : arr)
 	{
 		std::cout << i << "\t";
 	}
-	std::cout << std::endl;
-
-	/*List list = { 3, 5, 8, 13, 21 };
-	List list2 = { 1, 2, 3, 4, 5 };
-
-	List list3 = list + list2;
-	list3.print();
-	list3.print_reverse();
-	std::cout << Delimiter << std::endl;*/
+	std::cout << std::endl;*/
 
 
 	List list = { 3, 5, 8, 13, 21 };
@@ -429,11 +426,41 @@ void main()
 	List list3;
 	list3 = list + list2;
 	list3.print();
-	//#endif // DEBUG
+
 	for (List::ReverseIterator rit = list3.rbegin(); rit != list3.rend(); rit++)
 	{
 		std::cout << *rit << "\t";
 	}
 	std::cout << std::endl;
+#endif // OPERATOR_PLUS_CHECK
+#ifdef TEMPLATE_CHECK
+	
+	List<int> list1 = { 3, 5, 8, 13, 21 };
+	for (List<int>::Iterator it = list1.begin(); it != list1.end(); it++)
+	{
+		std::cout << *it << "\t";
+	}
+	std::cout << std::endl;
+
+	/*List<double> list2 = { 2.7, 3.14, 5.5 };
+	for(double i:list2) std::cout << i << "\t";
+	std::cout << std::endl;
+
+	List<std::string> list3 = { "Hello", "World", "How", "are", "you?" };
+	for (std::string i : list3)
+	{
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;*/
+
+	List<int> list2 = { 34, 55, 89 };
+	for (int i : list2)
+		std::cout << i << "\t";
+	std::cout << std::endl; 
+
+	List<int> list3 = list1 + list2;
+	list3.print();
+
+#endif // TEMPLATE_CHECK
 
 }
