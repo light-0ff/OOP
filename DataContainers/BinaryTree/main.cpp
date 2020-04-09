@@ -20,50 +20,56 @@ class BTree
 	}*Root;
 	friend class Iterator;
 public: 
-	/*
+	
 	class Iterator
 	{
-		Element* Temp;
+		Element* prevRoot;
+		Element* Root;
 	public:
-		Iterator(Element* Temp)
+		Iterator(Element* Root):Root(Root)
 		{
-			this->Temp = Temp;
-			std::cout << "ItConstructor:\t" << this << std::endl;
+			prevRoot = nullptr;
+			//std::cout << "ItConstructor:\t" << this << std::endl;
 		}
 		~Iterator()
 		{
-			std::cout << "ItDestructor:\t" << this << std::endl;
+		//	std::cout << "ItDestructor:\t" << this << std::endl;
 		}
 
 		//		Operators:
+		const int& operator*()const
+		{
+			return Root->data;
+		}
+		int& operator*()
+		{
+			return Root->data;
+		}
+		bool operator==(const Iterator& other)const
+		{
+			return this->Root == other.Root;
+		}
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Root != other.Root;
+		}
+
 		Iterator& operator++()
 		{
-			Temp = Temp->pRight;
+			prevRoot = Root;
+			int i;
+			//if ( i = 0; i < 10; i++)
+			
 			return *this;
 		}
 		Iterator operator++(int)
 		{
 			Iterator old = *this;
-			Temp = Temp->pRight;
+			Root = Root->pRight;
 			return old;
 		}
-		const int& operator*()const
-		{
-			return Temp->data;
-		}
-		int& operator*()
-		{
-			return Temp->data;
-		}
-		bool operator==(const Iterator& other)const
-		{
-			return this->Temp == other.Temp;
-		}
-		bool operator!=(const Iterator& other)const
-		{
-			return this->Temp != other.Temp;
-		}
-	}; */
+	}; 
+	/////////////////////////////////////////////////////////////////////
 	Element* getRoot()
 	{
 		return this->Root;
