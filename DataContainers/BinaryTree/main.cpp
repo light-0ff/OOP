@@ -70,9 +70,9 @@ public:
 	}
 	BTree() :Root(nullptr)
 	{
-		std::cout << "TConstructor:\t" << this << std::endl;
+		std::cout << "BTConstructor:\t" << this << std::endl;
 	}
-	BTree(std::initializer_list<int> il) :Root()
+	BTree(std::initializer_list<int> il) :BTree()
 	{
 		//std::cout << typeid(il.begin()).name() << std::endl;
 		for (int i : il)
@@ -80,7 +80,7 @@ public:
 			insert(i);
 		}
 	}
-	BTree(const BTree& other) :Root()
+	BTree(const BTree& other) :BTree()
 	{
 		/*
 		if (other.Root == nullptr) return;
@@ -97,7 +97,7 @@ public:
 			it = it->pRight;
 		} */
 		copyTree(this->Root, other.Root);
-		std::cout << "LCopyConstructor:\t" << this << std::endl;
+		std::cout << "BTCopyConstructor:\t" << this << std::endl;
 	}
 	~BTree()
 	{
@@ -107,9 +107,10 @@ public:
 	//		Operators
 	BTree& operator=(const BTree& other)
 	{
+		if (this == &other)return *this;
 		this->clear();
 		copyTree(this->Root, other.Root);
-		std::cout << std::endl << "FLCopyAssignment\t" << this << std::endl;
+		std::cout << std::endl << "BTCopyAssignment\t" << this << std::endl;
 		return *this;
 	}
 	//		Fake "Wraper"	---------------------------------------------
@@ -157,19 +158,15 @@ public:
 	//-----------------------------------------------
 private:
 	//			Adding elements
-	void copyTree(Element* Left, Element* Right /*Element*& other*/)
+	void copyTree(Element*& thisRoot, Element* otherRoot /*Element*& other*/)
 	{
-		if (Right == nullptr)	Left = nullptr;
+		if (otherRoot == nullptr)	return;
 		else
 		{
-			Left = new Element(Right->data);
-			this->insert(Right->data);
-			copyTree(Left->pLeft, Right->pLeft);
-			copyTree(Left->pRight, Right->pRight);
+			thisRoot = new Element(otherRoot->data);
+			copyTree(thisRoot->pLeft, otherRoot->pLeft);
+			copyTree(thisRoot->pRight, otherRoot->pRight);
 		}
-		//if (other == nullptr) return;
-		/*this->insert(other->data);
-		copyTree(Root->pLeft);*/
 	}
 	void insert(int data, Element* Root)
 	{
@@ -326,6 +323,8 @@ void main()
 
 	BTree T1000 = T800;
 	T1000.print();
+
+	std::cout << "----------------------------------------------\n";
 
 	BTree T0;
 	T0 = T1000;
