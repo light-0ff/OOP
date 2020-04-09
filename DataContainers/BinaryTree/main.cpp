@@ -18,7 +18,52 @@ class BTree
 		}
 		friend class BTree;
 	}*Root;
-public:
+	friend class Iterator;
+public: 
+	/*
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp)
+		{
+			this->Temp = Temp;
+			std::cout << "ItConstructor:\t" << this << std::endl;
+		}
+		~Iterator()
+		{
+			std::cout << "ItDestructor:\t" << this << std::endl;
+		}
+
+		//		Operators:
+		Iterator& operator++()
+		{
+			Temp = Temp->pRight;
+			return *this;
+		}
+		Iterator operator++(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pRight;
+			return old;
+		}
+		const int& operator*()const
+		{
+			return Temp->data;
+		}
+		int& operator*()
+		{
+			return Temp->data;
+		}
+		bool operator==(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+	}; */
 	Element* getRoot()
 	{
 		return this->Root;
@@ -27,10 +72,45 @@ public:
 	{
 		std::cout << "TConstructor:\t" << this << std::endl;
 	}
+	BTree(std::initializer_list<int> il) :Root()
+	{
+		//std::cout << typeid(il.begin()).name() << std::endl;
+		for (int i : il)
+		{
+			insert(i);
+		}
+	}
+	BTree(const BTree& other) :Root()
+	{
+		/*
+		if (other.Root == nullptr) return;
+		Element* it = other.Root;
+		//insert(it->data);
+		while (it->pLeft != nullptr)
+		{
+			insert(it->data);
+			it = it->pLeft;
+		}
+		while (it != nullptr)
+		{
+			insert(it->data);
+			it = it->pRight;
+		} */
+		copyTree(this->Root, other.Root);
+		std::cout << "LCopyConstructor:\t" << this << std::endl;
+	}
 	~BTree()
 	{
 		clear(this->Root);
 		std::cout << "TDestructor:\t" << this << std::endl;
+	}
+	//		Operators
+	BTree& operator=(const BTree& other)
+	{
+		this->clear();
+		copyTree(this->Root, other.Root);
+		std::cout << std::endl << "FLCopyAssignment\t" << this << std::endl;
+		return *this;
 	}
 	//		Fake "Wraper"	---------------------------------------------
 	void insert(int data)
@@ -40,6 +120,10 @@ public:
 	void erase(int Data)
 	{
 		erase(Data, this->Root);
+	}
+	void clear()
+	{
+		return clear(this->Root);
 	}
 	int minValue()
 	{
@@ -73,6 +157,20 @@ public:
 	//-----------------------------------------------
 private:
 	//			Adding elements
+	void copyTree(Element* Left, Element* Right /*Element*& other*/)
+	{
+		if (Right == nullptr)	Left = nullptr;
+		else
+		{
+			Left = new Element(Right->data);
+			this->insert(Right->data);
+			copyTree(Left->pLeft, Right->pLeft);
+			copyTree(Left->pRight, Right->pRight);
+		}
+		//if (other == nullptr) return;
+		/*this->insert(other->data);
+		copyTree(Root->pLeft);*/
+	}
 	void insert(int data, Element* Root)
 	{
 		if (this->Root == nullptr) //Если дерево пустое, то добавляем элемент прямо в корень.
@@ -159,7 +257,6 @@ private:
 		return sum(Root->pLeft) + sum(Root->pRight) + Root->data;
 	}
 
-
 	//		Methods:
 	void print(Element* Root)const
 	{
@@ -218,15 +315,19 @@ void main()
 	T800.print();
 
 #endif // ERASE_CHECK
-	/*
+	
 	BTree T800 = { 50, 25, 30, 75, 64, 85};
+	T800.print();
 
-	int value;
+	/*int value;
 	std::cout << "Type Value to erase: "; std::cin >> value;
 	T800.erase(value);
-	T800.print();
+	T800.print();*/
 
 	BTree T1000 = T800;
 	T1000.print();
-	*/
+
+	BTree T0;
+	T0 = T1000;
+	T0.print();
 }

@@ -396,6 +396,7 @@ void main()
 	list.print();
 	//for (int i = 0; i < list.get_size(); i++) std::cout << list[i] << "\t";
 	ForwardList list2 = {34, 55, 89};	
+	list2 = list;
 	list2.print();
 	ForwardList list3;
 	list3 = list + list2;
