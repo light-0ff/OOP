@@ -4,6 +4,7 @@
 #include<map>
 #include<list>
 #include<Windows.h>
+#include<boost/algorithm/string.hpp>
 
 #define delimiter "\n---------------------------------------\n";
 
@@ -18,16 +19,15 @@ void main()
 	setlocale(LC_ALL, "");
 	//map - это контейнер который хранит данные в виде бинорного дерева. 
 	//Каждый элемент этого дерева представляет собой ПАРУЖ key - value.
-	
-	std::map<std::string, std::list<std::string>> base = init();
 
+	std::map<std::string, std::list<std::string>> base = init();
 	print_full_base(base);
 	//std::cout<<typeid(std::string("Hello").c_str())
 	load(base);
 
 	//insert(base);
 	print_full_base(base);
-	save(base);
+	//save(base);
 }
 
 std::map < std::string, std::list<std::string>> init()
@@ -86,20 +86,40 @@ void save(const std::map<std::string, std::list<std::string>>& base)
 void load(std::map<std::string, std::list<std::string>>& base)
 {
 	base.clear();
+	print_full_base(base);
+	std::cout << "after clearing\n";
+	system("PAUSE");
+
 	std::string license_plate;
+	std::string violation;
 	std::list<std::string> violation_list;
 
 	std::ifstream fin("base.txt");
 
+	//SetConsoleCP(1251);
+	//SetConsoleCP(866);
 	if (fin.is_open())
 	{
+		//std::fstream& stream = fin
+		//std::cout << fin.tellg() << std::endl;
 		while (!fin.eof())
 		{
 			//fin.getline(license_plate.c_str(), 20, ":");
 			std::getline(fin, license_plate, ':');
-			//std::getline(fin, violation_list, ';'); //
+			if (license_plate.size() == 0)break;
+			std::getline(fin, violation, ';');
+			//std::cout << license_plate << " - " << violation << std::endl;
+
+			boost::algorithm::split(violation_list, violation, boost::is_any_of(","));
+			//base.insert(std::pair <std::string, std::list<std::string>>(license_plate, violation_list));
+			
+			std::cout << license_plate << ":";
+			for (std::string i : violation_list) std::cout << i << ", "; std::cout << ";\n";
+			/*print_full_base(base);
+			system("PAUSE");*/
 		}
 	}
+	//SetConsoleCP(866);
 	else
 	{
 		std::cerr << "Error: file is not found";
@@ -107,10 +127,9 @@ void load(std::map<std::string, std::list<std::string>>& base)
 
 	fin.close();
 
-	//return base;
 }
 
-void insert( std::map<std::string, std::list<std::string>>& base)
+void insert(std::map<std::string, std::list<std::string>>& base)
 {
 	std::string license_plate;
 	std::string violation;
