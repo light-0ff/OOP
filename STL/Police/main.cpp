@@ -5,6 +5,7 @@
 #include<list>
 #include<Windows.h>
 #include<boost/algorithm/string.hpp>
+#include<conio.h>
 
 #define delimiter "\n---------------------------------------\n";
 
@@ -13,6 +14,20 @@ void print_full_base(const std::map<std::string, std::list<std::string>>& base);
 void save(const std::map<std::string, std::list<std::string>>& base);
 void load(std::map<std::string, std::list<std::string>>& base);
 void insert(std::map<std::string, std::list<std::string>>& base);
+void print_Menu(char(*Mass)[7], int& gdeja)
+{
+	system("cls");
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			std::cout << Mass[i][j];
+		}
+		if (i == gdeja) std::cout << "\t<<<<" << std::endl;
+		else std::cout << std::endl;
+	}
+	std::cout << "ESC выход \t ENTER принять \t W Вверх \t S Вниз\n";
+}
 
 void main()
 {
@@ -20,13 +35,61 @@ void main()
 	//map - это контейнер который хранит данные в виде бинорного дерева. 
 	//Каждый элемент этого дерева представляет собой ПАРУЖ key - value.
 
-	std::map<std::string, std::list<std::string>> base = init();
-	print_full_base(base);
-	//std::cout<<typeid(std::string("Hello").c_str())
-	load(base);
+	std::map<std::string, std::list<std::string>> base;
 
-	//insert(base);
-	print_full_base(base);
+	/////////////////////////////////////////////////////////////////
+	int gdeja = 0;
+	char Mass[5][7]{
+		"\tINIT",
+		"\tLOAD",
+		"\tADD",
+		"\tPRINT",
+		"\tSAVE"
+	};
+	char direction;
+	do {
+		print_Menu(Mass, gdeja);
+		//Sleep(_kbhit()); //задержка для ввода
+		//while (_kbhit())
+		//{
+		direction = _getch();
+		//}
+		if (direction == 's')
+		{
+			gdeja++;
+			if (gdeja >= 5) gdeja = 0;
+		}
+		else if (direction == 'w')
+		{
+			gdeja--;
+			if (gdeja < 0) gdeja = 4;
+		}
+		else if (direction == 13)
+		{
+			switch (gdeja)
+			{
+			case 0: base = init(); break;
+			case 1: load(base); break;
+			case 2: insert(base); break;
+			case 3: print_full_base(base); break;
+			case 4: save(base); break;
+			}
+		}
+	} while (direction != 27);
+	//------------------------
+	//system("cls");
+	//print_Menu(Mass, gdeja);
+
+	///////////////////////////////////////////////////////////////
+
+	/*base = init();
+	print_full_base(base);*/
+
+	//std::cout<<typeid(std::string("Hello").c_str())
+	//load(base);
+
+	////insert(base);
+	//print_full_base(base);
 	//save(base);
 }
 
@@ -39,10 +102,13 @@ std::map < std::string, std::list<std::string>> init()
 		std::pair<std::string, std::list<std::string>>("BI 0002 BI",{"парковка в неположенном месте"}),
 		std::pair<std::string, std::list<std::string>>("BI 0003 BI",{"проезд на красный", "привышение скорости", "плюнул в полицейского"})
 	};
+	std::cout << "base is initialized\n";
+	system("pause");
 	return base;
 }
 void print_full_base(const std::map<std::string, std::list<std::string>>& base)
 {
+	system("cls");
 	for (auto m_it : base)
 	{
 		std::cout << m_it.first << ":\n";
@@ -52,6 +118,8 @@ void print_full_base(const std::map<std::string, std::list<std::string>>& base)
 		}
 		std::cout << delimiter;
 	}
+	system("pause");
+
 	/*for (std::map<std::string, std::list<std::string>>::iterator m_it = base.begin(); m_it != base.end(); m_it++)
 {
 	std::cout << m_it->first << ":\n";
@@ -112,7 +180,7 @@ void load(std::map<std::string, std::list<std::string>>& base)
 
 			boost::algorithm::split(violation_list, violation, boost::is_any_of(","));
 			//base.insert(std::pair <std::string, std::list<std::string>>(license_plate, violation_list));
-			
+
 			std::cout << license_plate << ":";
 			for (std::string i : violation_list) std::cout << i << ", "; std::cout << ";\n";
 			/*print_full_base(base);
