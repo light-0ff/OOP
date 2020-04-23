@@ -26,7 +26,7 @@ void print_Menu(char(*Mass)[7], int& gdeja)
 		if (i == gdeja) std::cout << "\t<<<<" << std::endl;
 		else std::cout << std::endl;
 	}
-	std::cout << "ESC выход \t ENTER принять \t W Вверх \t S Вниз\n";
+	std::cout << "ESC выход \t ENTER принять        W Вверх \t\tS Вниз\n";
 }
 
 void main()
@@ -53,13 +53,14 @@ void main()
 		//while (_kbhit())
 		//{
 		direction = _getch();
+		std::cout << direction;
 		//}
-		if (direction == 's')
+		if (direction == 's' || direction == 'P')
 		{
 			gdeja++;
 			if (gdeja >= 5) gdeja = 0;
 		}
-		else if (direction == 'w')
+		else if (direction == 'w'|| direction == 'H')
 		{
 			gdeja--;
 			if (gdeja < 0) gdeja = 4;
@@ -121,14 +122,14 @@ void print_full_base(const std::map<std::string, std::list<std::string>>& base)
 	system("pause");
 
 	/*for (std::map<std::string, std::list<std::string>>::iterator m_it = base.begin(); m_it != base.end(); m_it++)
-{
-	std::cout << m_it->first << ":\n";
-	for (std::list<std::string>::iterator l_it = m_it->second.begin(); l_it != m_it->second.end(); l_it++)
 	{
-		std::cout << " - " << l_it->c_str() << ";\n";
-	}
-std::cout << delimiter;
-}*/
+		std::cout << m_it->first << ":\n";
+		for (std::list<std::string>::iterator l_it = m_it->second.begin(); l_it != m_it->second.end(); l_it++)
+		{
+			std::cout << " - " << l_it->c_str() << ";\n";
+		}
+		std::cout << delimiter;
+	}*/
 
 }
 
@@ -154,9 +155,8 @@ void save(const std::map<std::string, std::list<std::string>>& base)
 void load(std::map<std::string, std::list<std::string>>& base)
 {
 	base.clear();
-	print_full_base(base);
+	//print_full_base(base);
 	std::cout << "after clearing\n";
-	system("PAUSE");
 
 	std::string license_plate;
 	std::string violation;
@@ -168,23 +168,23 @@ void load(std::map<std::string, std::list<std::string>>& base)
 	//SetConsoleCP(866);
 	if (fin.is_open())
 	{
-		//std::fstream& stream = fin
-		//std::cout << fin.tellg() << std::endl;
 		while (!fin.eof())
 		{
-			//fin.getline(license_plate.c_str(), 20, ":");
 			std::getline(fin, license_plate, ':');
 			if (license_plate.size() == 0)break;
 			std::getline(fin, violation, ';');
-			//std::cout << license_plate << " - " << violation << std::endl;
 
 			boost::algorithm::split(violation_list, violation, boost::is_any_of(","));
-			//base.insert(std::pair <std::string, std::list<std::string>>(license_plate, violation_list));
+			
 
-			std::cout << license_plate << ":";
-			for (std::string i : violation_list) std::cout << i << ", "; std::cout << ";\n";
-			/*print_full_base(base);
-			system("PAUSE");*/
+			std::map<std::string, std::list<std::string>>::iterator offender = base.find(license_plate);
+			//Создаем нового нарушителя в базу
+			base.insert(std::pair<std::string, std::list<std::string>>(license_plate, { violation }));
+
+
+			//std::cout << license_plate << ":";
+			//for (std::string i : violation_list) std::cout << i << ", "; std::cout << ";\n";
+
 		}
 	}
 	//SetConsoleCP(866);
@@ -194,7 +194,8 @@ void load(std::map<std::string, std::list<std::string>>& base)
 	}
 
 	fin.close();
-
+	std::cout << "base is loaded\n";
+	system("pause");
 }
 
 void insert(std::map<std::string, std::list<std::string>>& base)
