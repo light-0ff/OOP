@@ -26,7 +26,7 @@ void print_Menu(char(*Mass)[7], int& gdeja)
 		if (i == gdeja) std::cout << "\t<<<<" << std::endl;
 		else std::cout << std::endl;
 	}
-	std::cout << "ESC выход \t ENTER прин€ть        W ¬верх \t\tS ¬низ\n";
+	std::cout << "[ESC] выход \t [ENTER] прин€ть      [W] ¬верх \t[S] ¬низ\n";
 }
 
 void main()
@@ -47,6 +47,7 @@ void main()
 		"\tSAVE"
 	};
 	char direction;
+	/*
 	do {
 		print_Menu(Mass, gdeja);
 		//Sleep(_kbhit()); //задержка дл€ ввода
@@ -54,7 +55,7 @@ void main()
 		//{
 		direction = _getch();
 		std::cout << direction;
-		//}
+		//}]=-
 		if (direction == 's' || direction == 'P')
 		{
 			gdeja++;
@@ -76,10 +77,58 @@ void main()
 			case 4: save(base); break;
 			}
 		}
+	} while (direction != 27);  */
+	do {
+		print_Menu(Mass, gdeja);
+		direction = _getch();
+		std::cout << direction;
+		if (direction == 13)	direction = (char)gdeja + '1'; //при нажатии Enter
+
+		switch (direction)
+		{
+		case 'H': {
+
+		}
+		case 'w': {
+			gdeja--;
+			if (gdeja < 0) gdeja = 4;
+			break;
+		}
+		case 'P': {
+
+		}
+		case 's': {
+			gdeja++;
+			if (gdeja >= 5) gdeja = 0;
+			break;
+		}
+		case '1': {
+			base = init();
+			gdeja = 0;
+			break;
+		}
+		case '2': {
+			load(base);
+			gdeja = 1;
+			break;
+		}
+		case '3': {
+			insert(base);
+			gdeja = 2;
+			break;
+		}
+		case '4': {
+			print_full_base(base);
+			gdeja = 3;
+			break; }
+		case '5': {
+			save(base);
+			gdeja = 4;
+			break;
+		}
+				
+		}
 	} while (direction != 27);
-	//------------------------
-	//system("cls");
-	//print_Menu(Mass, gdeja);
 
 	///////////////////////////////////////////////////////////////
 
@@ -207,11 +256,12 @@ void insert(std::map<std::string, std::list<std::string>>& base)
 	std::getline(std::cin, license_plate);
 	SetConsoleCP(866);
 	std::cout << "¬ведите правонарушение: ";	//std::cin >> violation;
+	std::getline(std::cin, violation);
 	SetConsoleCP(1251);
 
 	if (license_plate.size() == 0 || violation.size() == 0) return;
 
-	std::getline(std::cin, violation);
+	//std::getline(std::cin, violation);
 	SetConsoleCP(866);
 	std::map<std::string, std::list<std::string>>::iterator offender = base.find(license_plate);
 	if (offender != base.end())
