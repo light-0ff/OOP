@@ -4,10 +4,11 @@
 #include<map>
 #include<list>
 #include<Windows.h>
-#include<boost/algorithm/string.hpp>
+#include<array>
 #include<conio.h>
+#include<boost/algorithm/string.hpp>
 
-#define delimiter "\n---------------------------------------\n";
+#define DEL "\n---------------------------------------\n";
 
 std::map < std::string, std::list<std::string>> init();
 void print_full_base(const std::map<std::string, std::list<std::string>>& base);
@@ -166,7 +167,7 @@ void print_full_base(const std::map<std::string, std::list<std::string>>& base)
 		{
 			std::cout << " - " << l_it << ";\n";
 		}
-		std::cout << delimiter;
+		std::cout << DEL;
 	}
 	system("pause");
 
