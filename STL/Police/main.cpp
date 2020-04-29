@@ -8,271 +8,342 @@
 #include<conio.h>
 #include<boost/algorithm/string.hpp>
 
-#define DEL "\n---------------------------------------\n";
+const int MENU_SIZE = 11;
 
-std::map < std::string, std::list<std::string>> init();
-void print_full_base(const std::map<std::string, std::list<std::string>>& base);
-void save(const std::map<std::string, std::list<std::string>>& base);
-void load(std::map<std::string, std::list<std::string>>& base);
-void insert(std::map<std::string, std::list<std::string>>& base);
-void print_Menu(char(*Mass)[7], int& gdeja)
-{
-	system("cls");
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
-			std::cout << Mass[i][j];
-		}
-		if (i == gdeja) std::cout << "\t<<<<" << std::endl;
-		else std::cout << std::endl;
-	}
-	std::cout << "[ESC] выход \t [ENTER] принять      [W] Вверх \t[S] Вниз\n";
-}
+#define DEL "\n---------------------------------------\n";
+#define LIC_PLATE_INP	std::wcout<<"Введите номер автомобиля: ";		std::wstring licensePlate;	std::getline(std::wcin, licensePlate);
+#define VIO_INP			std::wcout<<"Введите правонарушение: ";			std::wstring violation;		std::getline(std::wcin, violation); 
+
+void printFullMap(const std::map<std::wstring, std::list<std::wstring>>& map);
+void printOne(const std::map<std::wstring, std::list<std::wstring>>& map);
+
+std::map<std::wstring, std::list<std::wstring>> init();
+void insert(std::map<std::wstring, std::list<std::wstring>>& map);
+
+//void removePair(const std::map<std::wstring, std::list<std::wstring>>& map);
+//void removeViol(const std::map<std::wstring, std::list<std::wstring>>& map);
+
+void save(const std::map<std::wstring, std::list<std::wstring>>& map);
+void load(std::map<std::wstring, std::list<std::wstring>>& map);
+
+void menu();
+void printMenu(std::array<bool, MENU_SIZE> optionActive);
+
+std::list<std::wstring> EventList;
+
+void printEL();
+void loadEL();
+void saveEL();
+
+#define CHECKER
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	//map - это контейнер который хранит данные в виде бинорного дерева. 
-	//Каждый элемент этого дерева представляет собой ПАРУЖ key - value.
 
-	std::map<std::string, std::list<std::string>> base;
+#ifdef CHECKER
+	std::map<std::wstring, std::list<std::wstring>> PoliceDB = init();
+	//load(PoliceDB);
+	printFullMap(PoliceDB);
+#endif // CHECKER
 
-	/////////////////////////////////////////////////////////////////
-	int gdeja = 0;
-	char Mass[5][7]{
-		"\tINIT",
-		"\tLOAD",
-		"\tADD",
-		"\tPRINT",
-		"\tSAVE"
-	};
-	char direction;
-	/*
-	do {
-		print_Menu(Mass, gdeja);
-		//Sleep(_kbhit()); //задержка для ввода
-		//while (_kbhit())
-		//{
-		direction = _getch();
-		std::cout << direction;
-		//}]=-
-		if (direction == 's' || direction == 'P')
+	menu();
+	
+}
+
+void menu()
+{
+	std::map<std::wstring, std::list<std::wstring>> PoliceDB = init();
+	std::array<bool, MENU_SIZE> optionActive = { true, false, false, false, false, false, false, false, false, false, false };
+	char key = 72;
+	while (key != 27) {
+		system("cls");
+		printMenu(optionActive);
+		key = _getch();
+		for (int i = 0; i < optionActive.size(); i++)
 		{
-			gdeja++;
-			if (gdeja >= 5) gdeja = 0;
-		}
-		else if (direction == 'w'|| direction == 'H')
-		{
-			gdeja--;
-			if (gdeja < 0) gdeja = 4;
-		}
-		else if (direction == 13)
-		{
-			switch (gdeja)
-			{
-			case 0: base = init(); break;
-			case 1: load(base); break;
-			case 2: insert(base); break;
-			case 3: print_full_base(base); break;
-			case 4: save(base); break;
+			if ((key == 72 || key == 80) && optionActive[i]) {
+				optionActive[i] = false;
+				if (key == 72) { i == 0 ? optionActive[optionActive.size() - 1] = true : optionActive[i - 1] = true; }
+				else if (key == 80) { (i == optionActive.size() - 1) ? optionActive[0] = true : optionActive[i + 1] = true; }
+				i = optionActive.size();
+			}
+			else if (optionActive[i]&&((key>47&&key<58)||key==45)) {
+				optionActive[i] = false;
+				switch (char(key))
+				{
+				case '1':optionActive[0] = true; break;
+				case '2':optionActive[1] = true; break;
+				case '3':optionActive[2] = true; break;
+				case '4':optionActive[3] = true; break;
+				case '5':optionActive[4] = true; break;
+				case '6':optionActive[5] = true; break;
+				case '7':optionActive[6] = true; break;
+				case '8':optionActive[7] = true; break;
+				case '9':optionActive[8] = true; break;
+				case '0':optionActive[9] = true; break;
+				case '-':optionActive[10] = true; break;
+				default:break;
+				}
+				i = optionActive.size();
+			}
+			if (key == 13) {
+				system("cls");
+				do {
+					if (optionActive[0]) printFullMap(PoliceDB);
+					if (optionActive[1]) printOne(PoliceDB);
+					if (optionActive[2]) insert(PoliceDB);
+					//if (optionActive[3]) removePair(PoliceDB);
+					//if (optionActive[4]) removeViol(PoliceDB);
+					if (optionActive[5]) load(PoliceDB);
+					if (optionActive[6]) save(PoliceDB);
+
+					if (optionActive[7]) printEL();
+					if (optionActive[8]) saveEL();
+					if (optionActive[9]) loadEL();
+					if (optionActive[10]) { EventList.clear(); std::wcout << L"\n\nЖурнал событий очищен"; std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] clean\n"; }
+				} while (true); //------------------------------------------------------------
 			}
 		}
-	} while (direction != 27);  */
-	do {
-		print_Menu(Mass, gdeja);
-		direction = _getch();
-		std::cout << direction;
-		if (direction == 13)	direction = (char)gdeja + '1'; //при нажатии Enter
-
-		switch (direction)
-		{
-		case 'H': {
-
-		}
-		case 'w': {
-			gdeja--;
-			if (gdeja < 0) gdeja = 4;
-			break;
-		}
-		case 'P': {
-
-		}
-		case 's': {
-			gdeja++;
-			if (gdeja >= 5) gdeja = 0;
-			break;
-		}
-		case '1': {
-			base = init();
-			gdeja = 0;
-			break;
-		}
-		case '2': {
-			load(base);
-			gdeja = 1;
-			break;
-		}
-		case '3': {
-			insert(base);
-			gdeja = 2;
-			break;
-		}
-		case '4': {
-			print_full_base(base);
-			gdeja = 3;
-			break; }
-		case '5': {
-			save(base);
-			gdeja = 4;
-			break;
-		}
-				
-		}
-	} while (direction != 27);
-
-	///////////////////////////////////////////////////////////////
-
-	/*base = init();
-	print_full_base(base);*/
-
-	//std::cout<<typeid(std::string("Hello").c_str())
-	//load(base);
-
-	////insert(base);
-	//print_full_base(base);
-	//save(base);
-}
-
-std::map < std::string, std::list<std::string>> init()
-{
-	std::map<std::string, std::list<std::string>> base =
-	{
-		std::pair <std::string, std::list<std::string>>("BI 0000 BI", {"привышение скорости", "вождение в нетрезвом состоянии"}),
-		std::pair<std::string, std::list<std::string>>("BI 0001 BI",{"езда по встречке"}),
-		std::pair<std::string, std::list<std::string>>("BI 0002 BI",{"парковка в неположенном месте"}),
-		std::pair<std::string, std::list<std::string>>("BI 0003 BI",{"проезд на красный", "привышение скорости", "плюнул в полицейского"})
-	};
-	std::cout << "base is initialized\n";
-	system("pause");
-	return base;
-}
-void print_full_base(const std::map<std::string, std::list<std::string>>& base)
-{
-	system("cls");
-	for (auto m_it : base)
-	{
-		std::cout << m_it.first << ":\n";
-		for (std::string l_it : m_it.second)
-		{
-			std::cout << " - " << l_it << ";\n";
-		}
-		std::cout << DEL;
 	}
-	system("pause");
+}
 
-	/*for (std::map<std::string, std::list<std::string>>::iterator m_it = base.begin(); m_it != base.end(); m_it++)
+void printMenu(std::array<bool, MENU_SIZE> optionActive)
+{
+	std::wcout << "\n\n";
+	std::array<std::pair<std::wstring, std::wstring>, MENU_SIZE> menuOptions = {
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tPRINT FULL DB\t<<<<<\n", L"\t\t\tPRINT FULL DB\n"),
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tPRINT ONE\t<<<<<\n", L"\t\t\tPRINT ONE\n"),
+
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tADD NEW\t<<<<<\n", L"\t\t\tADD NEW\n"),
+
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tERASE\t<<<<<\n", L"\t\t\tERASE\n"),
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tREMOVE VIOL\t<<<<<\n", L"\t\t\tREMOVE VIOL\n"),
+
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tLOAD DB\t<<<<<\n", L"\t\t\tLOAD DB\n"),
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tSAVE DB\t<<<<<\n", L"\t\t\tSAVE DB\n"),
+
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tPRINT EL\t<<<<<\n", L"\t\t\tPRINT EL\n"),
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tSAVE EL\t<<<<<\n", L"\t\t\tSAVE EL\n"),
+
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tLOAD EL\t<<<<<\n", L"\t\t\tLOAD EL\n"),
+		std::pair<std::wstring, std::wstring>
+		(L"\t\t>>>>>\tCLEAN EL\t<<<<<\n", L"\t\t\tCLEAN EL\n")
+	};
+	std::wcout << "\n\t\t ~~~ Traffic Police Database ~~~\n\n";
+	for (int i = 0; i < menuOptions.size(); i++)
 	{
-		std::cout << m_it->first << ":\n";
-		for (std::list<std::string>::iterator l_it = m_it->second.begin(); l_it != m_it->second.end(); l_it++)
-		{
-			std::cout << " - " << l_it->c_str() << ";\n";
+		if (optionActive[i]) std::wcout << menuOptions[i].first;
+		else std::wcout << menuOptions[i].second;
+		if (i == 6) std::wcout << "\n";
+	}
+	std::wcout << "\n\n\t[Esc] Exit\t\t\t[Enter] Choose\n";
+}
+
+void printFullMap(const std::map<std::wstring, std::list<std::wstring>>& map)
+{
+	//---------------------------------------------------------------
+	for (std::pair<std::wstring, std::list<std::wstring>> m_it : map)
+	{
+		std::wcout << m_it.first << " : ";
+		if (m_it.second.empty()) std::wcout << "\t\t\t\t\t...empty...";
+		else {
+			for (std::list<std::wstring>::iterator l_it = m_it.second.begin(); l_it != m_it.second.end(); l_it)
+			{
+				std::wcout << "\n\t" << *l_it;
+				l_it++;
+				if (l_it != m_it.second.end()) std::wcout << ",";
+			}
+			std::wcout << ",";
 		}
-		std::cout << delimiter;
-	}*/
+		DEL;
+	}
+	EventList.push_back(L"База данных напечатана");
+
+	std::wcout << "\n\n\t[Esc] Exit\t\t\t[Any key] Print\n";
 
 }
 
-void save(const std::map<std::string, std::list<std::string>>& base)
+void printOne(const std::map<std::wstring, std::list<std::wstring>>& map)
 {
-	std::ofstream fout("base.txt");
-	//CSV - Comma Separated values;
-	for (std::pair<std::string, std::list<std::string>> i : base)
+	LIC_PLATE_INP
+	std::wcout << "\n\n";
+	bool notFound = true;
+	for (std::pair<std::wstring, std::list<std::wstring>> m_it : map)
 	{
-		fout << i.first << ":";
-		for (std::string j : i.second)
+		if (m_it.first == licensePlate)
 		{
-			fout << " " << j << ",";
+			std::wcout << m_it.first << ":\n";
+			if(m_it.second.empty()) std::wcout << "\t...empty...";
+			else {
+				for (std::wstring l_it : m_it.second) {
+					std::wcout << "\t" << l_it << "\n";
+					notFound = false;
+					EventList.push_back(L"Напечатаны правонарушения по номеру: " + licensePlate);
+				}
+			}
+			break;
 		}
-		fout.seekp(-1, std::ios::cur);//удаляет последний символ, перед ";"
+	}
+
+}
+
+std::map<std::wstring, std::list<std::wstring>> init()
+{
+	std::map<std::wstring, std::list<std::wstring>> PoliceDB =
+	{
+		std::pair<std::wstring, std::list<std::wstring>>
+		(L"BI0000BI", {L"превышение скорости", L"воздение в нетрезвом состоянии"}),
+
+		std::pair<std::wstring, std::list<std::wstring>>
+		(L"BI0001BI", {L"езда по встречке"}),
+
+		std::pair<std::wstring, std::list<std::wstring>>
+		(L"BI0002BI", {L"парковка а неположеном месте"}),
+
+		std::pair<std::wstring, std::list<std::wstring>>
+		(L"BI0003BI", {L"проезд на красный", L"плюнул в полицейского"})
+	};
+	EventList.push_back(L"База данный проинициализирована");
+	return PoliceDB;
+}
+void insert(std::map<std::wstring, std::list<std::wstring>>& map)
+{
+	LIC_PLATE_INP
+	if (licensePlate.size() < 6) { std::wcout << L"\n\nВы не указали номер автомобиля."; }
+	else {
+		VIO_INP
+		if(violation.size()<10) { std::wcout << L"\n\nВы не указали правонарушение."; }
+		else {
+			std::map<std::wstring, std::list<std::wstring>>::iterator offender = map.find(licensePlate);
+			if (offender != map.end())offender->second.push_back(violation);
+			else {
+				map.insert(std::pair<std::wstring, std::list<std::wstring>>(licensePlate, { violation }));
+				EventList.push_back(L"Добавлен новый номер транспортного средства");
+				std::wcout << L"\n\nДобавлен новый номер транспортного средства.";
+			}
+		}
+	}
+	
+}
+
+//void removePair(const std::map<std::wstring, std::list<std::wstring>>& map)
+//void removeViol(const std::map<std::wstring, std::list<std::wstring>>& map)
+
+void save(const std::map<std::wstring, std::list<std::wstring>>& map)
+{
+	std::wofstream fout(L"base.txt");
+	for (std::pair<std::wstring, std::list<std::wstring>> m_it : map)
+	{
+		fout << m_it.first << ":";
+		for (std::wstring l_it : m_it.second)
+		{
+			fout << l_it << ",";
+		}
+		fout.seekp(-1, std::ios::cur);
 		fout << ";\n";
 	}
 	fout.close();
+	EventList.push_back(L"Базза данных сохранена");
+	std::wcout << L"Database saved in file \"base.txt\" in project folder\n\n";
+	std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] Resave\n";
 	system("start notepad base.txt");
-
 }
-
-void load(std::map<std::string, std::list<std::string>>& base)
+void load(std::map<std::wstring, std::list<std::wstring>>& map)
 {
-	base.clear();
-	//print_full_base(base);
-	std::cout << "after clearing\n";
+	map.clear();
+	std::wcout << "Database is cleaned.\n\n";
+	std::wstring licensePlate;
+	std::wstring violation;
+	std::list<std::wstring> violationList;
 
-	std::string license_plate;
-	std::string violation;
-	std::list<std::string> violation_list;
+	std::wifstream fin(L"base.txt");
 
-	std::ifstream fin("base.txt");
-
-	//SetConsoleCP(1251);
-	//SetConsoleCP(866);
 	if (fin.is_open())
 	{
+		bool firstLine = false;
 		while (!fin.eof())
 		{
-			std::getline(fin, license_plate, ':');
-			if (license_plate.size() == 0)break;
-			std::getline(fin, violation, ';');
-
-			boost::algorithm::split(violation_list, violation, boost::is_any_of(","));
-			
-
-			std::map<std::string, std::list<std::string>>::iterator offender = base.find(license_plate);
-			//Создаем нового нарушителя в базу
-			base.insert(std::pair<std::string, std::list<std::string>>(license_plate, { violation }));
-
-
-			//std::cout << license_plate << ":";
-			//for (std::string i : violation_list) std::cout << i << ", "; std::cout << ";\n";
-
+			if (firstLine) std::getline(fin, licensePlate, L'\n');
+			firstLine = true;
+			std::getline(fin, licensePlate, L':');
+			if (licensePlate == L"")break;
+			//
+			std::getline(fin, violation, L';');
+			//
+			boost::algorithm::split(violationList, violation, boost::is_any_of(L",L"));
+			//
+			map.insert(
+				std::pair<std::wstring, std::list<std::wstring>>
+				(licensePlate, violationList)
+			);
+			if (violation.size() == 0)map[licensePlate].clear();
 		}
+		EventList.push_back(L"База данных загружена");
+		std::wcout << L"Database is loaded. \n\n";
 	}
-	//SetConsoleCP(866);
-	else
-	{
-		std::cerr << "Error: file is not found";
+	else {
+		EventList.push_back(L"Файл загрузки не найден");
+		std::wcout << L"Error: file is not found";
 	}
-
-	fin.close();
-	std::cout << "base is loaded\n";
-	system("pause");
+	std::wcout << "\n\n\t[Esc] Exit\t\t\t[Any key] Reload\n";
 }
 
-void insert(std::map<std::string, std::list<std::string>>& base)
+void printEL()
 {
-	std::string license_plate;
-	std::string violation;
-	std::cout << "Введите номер автомобиля: ";	//std::cin >> license_plate;
-	SetConsoleCP(1251);
-	std::getline(std::cin, license_plate);
-	SetConsoleCP(866);
-	std::cout << "Введите правонарушение: ";	//std::cin >> violation;
-	std::getline(std::cin, violation);
-	SetConsoleCP(1251);
-
-	if (license_plate.size() == 0 || violation.size() == 0) return;
-
-	//std::getline(std::cin, violation);
-	SetConsoleCP(866);
-	std::map<std::string, std::list<std::string>>::iterator offender = base.find(license_plate);
-	if (offender != base.end())
+	std::wcout << "events: " << EventList.size() << " | " << DEL;
+	for (std::wstring ev :EventList)
 	{
-		//ЕСЛИ номер уже есть в базе то добавляем нарушение к сушествующему номеру
-		offender->second.push_back(violation);
+		std::wcout << L"\n\t" << ev;
+		if (EventList.size() < 20)std::wcout << L"\n";
 	}
-	else
+	EventList.push_back(L"Журнал событий просмотрен");
+	std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] Refresh\n";
+}
+void loadEL()
+{
+	EventList.clear();
+	std::wstring event;
+
+	std::wifstream fin(L"evlist.txt");
+	if (fin.is_open())
 	{
-		//Создаем нового нарушителя в базу
-		base.insert(std::pair<std::string, std::list<std::string>>(license_plate, { violation }));
+		while(!fin.eof())
+		{
+			std::getline(fin, event, L'\n');
+			std::wcout << event << L"\n";
+			EventList.push_back(event);
+		}
+		EventList.push_back(L"Журнал событий загружен");
+		std::wcout << L"\n\nЖурнал событий загружен";
 	}
+	else {
+		EventList.push_back(L"Файл загрузки не найден");
+		std::wcout << L"Error: file is not found";
+	}
+	std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] Reload\n";
+}
+void saveEL()
+{
+	std::wofstream fout(L"evlist.txt");
+	int count = 1;
+	for (std::wstring ev : EventList)
+	{
+		fout << ev;
+		if (count < EventList.size() - 1) std::wcout << "\n"; count++;
+	}
+	fout.close();
+	EventList.push_back(L"Журнал событий сохранен");
+	std::wcout << L"\n\nЖурнал событий сохранен";
+	std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] Resave\n";
 }
