@@ -102,7 +102,7 @@ void menu()
 					if (optionActive[8]) saveEL();
 					if (optionActive[9]) loadEL();
 					if (optionActive[10]) { EventList.clear(); std::wcout << L"\n\nЖурнал событий очищен"; std::wcout << L"\n\n\t[Esc] Exit\t\t\t[Any key] clean\n"; }
-				} while (true); //------------------------------------------------------------
+				} while (_getch() != 27); //------------------------------------------------------------
 			}
 		}
 	}
@@ -118,25 +118,25 @@ void printMenu(std::array<bool, MENU_SIZE> optionActive)
 		(L"\t\t>>>>>\tPRINT ONE\t<<<<<\n", L"\t\t\tPRINT ONE\n"),
 
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tADD NEW\t<<<<<\n", L"\t\t\tADD NEW\n"),
+		(L"\t\t>>>>>\tADD NEW\t\t<<<<<\n", L"\t\t\tADD NEW\n"),
 
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tERASE\t<<<<<\n", L"\t\t\tERASE\n"),
+		(L"\t\t>>>>>\tERASE\t\t<<<<<\n", L"\t\t\tERASE\n"),
 		std::pair<std::wstring, std::wstring>
 		(L"\t\t>>>>>\tREMOVE VIOL\t<<<<<\n", L"\t\t\tREMOVE VIOL\n"),
 
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tLOAD DB\t<<<<<\n", L"\t\t\tLOAD DB\n"),
+		(L"\t\t>>>>>\tLOAD DB\t\t<<<<<\n", L"\t\t\tLOAD DB\n"),
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tSAVE DB\t<<<<<\n", L"\t\t\tSAVE DB\n"),
+		(L"\t\t>>>>>\tSAVE DB\t\t<<<<<\n", L"\t\t\tSAVE DB\n"),
 
 		std::pair<std::wstring, std::wstring>
 		(L"\t\t>>>>>\tPRINT EL\t<<<<<\n", L"\t\t\tPRINT EL\n"),
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tSAVE EL\t<<<<<\n", L"\t\t\tSAVE EL\n"),
+		(L"\t\t>>>>>\tSAVE EL\t\t<<<<<\n", L"\t\t\tSAVE EL\n"),
 
 		std::pair<std::wstring, std::wstring>
-		(L"\t\t>>>>>\tLOAD EL\t<<<<<\n", L"\t\t\tLOAD EL\n"),
+		(L"\t\t>>>>>\tLOAD EL\t\t<<<<<\n", L"\t\t\tLOAD EL\n"),
 		std::pair<std::wstring, std::wstring>
 		(L"\t\t>>>>>\tCLEAN EL\t<<<<<\n", L"\t\t\tCLEAN EL\n")
 	};
@@ -164,7 +164,7 @@ void printFullMap(const std::map<std::wstring, std::list<std::wstring>>& map)
 				l_it++;
 				if (l_it != m_it.second.end()) std::wcout << ",";
 			}
-			std::wcout << ",";
+			std::wcout << ";\n";
 		}
 		DEL;
 	}
@@ -250,7 +250,7 @@ void save(const std::map<std::wstring, std::list<std::wstring>>& map)
 		{
 			fout << l_it << ",";
 		}
-		fout.seekp(-1, std::ios::cur);
+		//fout.seekp(-1, std::ios::cur);
 		fout << ";\n";
 	}
 	fout.close();
