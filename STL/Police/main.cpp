@@ -46,7 +46,7 @@ void main()
 	//load(PoliceDB);
 	printFullMap(PoliceDB);
 #endif // CHECKER
-
+	_getch();//	just for pause
 	menu();
 	
 }
@@ -184,10 +184,10 @@ void printOne(const std::map<std::wstring, std::list<std::wstring>>& map)
 		if (m_it.first == licensePlate)
 		{
 			std::wcout << m_it.first << ":\n";
-			if(m_it.second.empty()) std::wcout << "\t...empty...";
+			if(m_it.second.empty()) std::wcout << L"\t...empty...";
 			else {
 				for (std::wstring l_it : m_it.second) {
-					std::wcout << "\t" << l_it << "\n";
+					std::wcout << "\t" << l_it << L"\n";
 					notFound = false;
 					EventList.push_back(L"Напечатаны правонарушения по номеру: " + licensePlate);
 				}
@@ -248,9 +248,9 @@ void save(const std::map<std::wstring, std::list<std::wstring>>& map)
 		fout << m_it.first << ":";
 		for (std::wstring l_it : m_it.second)
 		{
-			fout << l_it << ",";
+			fout << " " << l_it << ",";
 		}
-		//fout.seekp(-1, std::ios::cur);
+		fout.seekp(-1, std::ios::cur);
 		fout << ";\n";
 	}
 	fout.close();
@@ -262,7 +262,7 @@ void save(const std::map<std::wstring, std::list<std::wstring>>& map)
 void load(std::map<std::wstring, std::list<std::wstring>>& map)
 {
 	map.clear();
-	std::wcout << "Database is cleaned.\n\n";
+	std::wcout << L"Database is cleaned.\n\n";
 	std::wstring licensePlate;
 	std::wstring violation;
 	std::list<std::wstring> violationList;
