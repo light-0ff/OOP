@@ -1,6 +1,7 @@
 #include<iostream>
 #include<thread>
 #include<conio.h>
+using namespace std::chrono_literals;
 
 #define DELIMETER std::cout<<"\n______________________________________\n";
 
@@ -23,7 +24,7 @@ public:
 	{
 		this->volume = volume < 20 ? 20 : volume>100 ? 100 : volume;
 		this->fuel_level = 0;
-		std::cout << "Tank ready:\t" << this << std::endl;
+		//std::cout << "Tank ready:\t" << this << std::endl;
 	}
 	~Tank()
 	{
@@ -78,7 +79,7 @@ public:
 		this->consuption = consuption < 3 ? 3 : consuption>20 ? 20 : consuption;
 		this->consuption_per_second = this->consuption / 1000;
 		is_started = false;
-		std::cout << "Engine is ready:\t" << this << std::endl;
+		//std::cout << "Engine is ready:\t" << this << std::endl;
 	}
 	~Engine()
 	{
@@ -125,14 +126,18 @@ class Car
 		//этот поток отслеживает состояние,, в том числе и бака
 		std::thread* idle_thread;	//холостой ход двигателя. создается, когда мы заводим машину, и удаляется когда мы останавливаем двигатель
 									//етот поток влияет на состояние бака
+		std::thread* wheelinng_thread;
 	}control_panel;
+
+
 public:
 	Car(double tank_volume, double engine_consumption, unsigned int max_speed = 250) :
 		tank(tank_volume), engine(engine_consumption), driver_inside(false), speed(0), max_speed(max_speed
 		)
 	{
 		control_panel.maim_thread = new std::thread(&Car::control, this);
-		std::cout << "Your car is ready to go. \nPress enter to get in. \nPress F to fill tank" << std::endl;
+		std::cout << "Your car is ready to go." << std::endl;
+		std::cout << "[Enter] - to get in. \n[F] - to fill tank" << std::endl;
 	}
 	~Car()
 	{
@@ -184,12 +189,16 @@ public:
 		while (driver_inside)
 		{
 			system("CLS");
-			std::cout << "Engine is " << (engine.started() ? "started" : "stopped") << std::endl;
-			std::cout << "Fuel:\t" << tank.get_fuel_level() << " liters.\t" << std::endl;
-			if (tank.get_fuel_level() < 5) std::cout << "Low Fuel\n";
+			std::cout << "Engine is " << (engine.started() ? "started" : "stopped");
+			std::cout << "\tFuel:\t" << tank.get_fuel_level() << " liters.\t" << std::endl;
+			//if (tank.get_fuel_level() < 5) std::cout << "Low Fuel\n";
+			std::cout << (tank.get_fuel_level() < 5 ?"Low Fuel\n":"\n");
 			std::cout << speed << " km/h.\n";
+			std::cout << "[Enter] - to get out\n";
+			std::cout << "[I] - to ignite\n";
+			std::cout << "[R] - to ride(not working)\n";
 
-			using namespace std::chrono_literals;
+			
 			std::this_thread::sleep_for(500ms);
 		}
 	}
@@ -197,7 +206,7 @@ public:
 	{
 		while (engine.started() && tank.give_fuel(engine.get_consuption_per_second()))
 		{
-			using namespace std::chrono_literals;
+			
 			std::this_thread::sleep_for(1s);
 		}
 		engine.stop();
@@ -208,8 +217,8 @@ public:
 		// Зависимость потребления от скорости ?
 		while (engine.started() && tank.give_fuel((tank.get_fuel_level() >= 5 ? 0.005 : 0.001) * this->speed))
 		{
-			std::cout << "я еду?\n";
-			using namespace std::chrono_literals;
+			std::cout << "я еду?\n"; //проверка на активность. потом удалить
+			
 			std::this_thread::sleep_for(1s);
 		}
 		//engine.stop();
@@ -251,18 +260,46 @@ public:
 					stop();
 				}
 				break;
+			case 'W':
+			case 'w':
+				accellerate();
+				if (speed > 0)control_panel.wheelinng_thread = new std::thread(&Car::free_wheeling, this);
+				if (control_panel.wheelinng_thread->joinable()) control_panel.wheelinng_thread->join();
+				
+				break;
 			case 'R':
 			case 'r':
 				if (this->speed < this->max_speed) 
 				{
 					this->speed += 10; // менять скорость НЕ ГОТОВО
 				}
+
 				ride();
 				break;
 			}
 		/*	using namespace std::chrono_literals;
 			std::this_thread::sleep_for(1s);*/
 		} while (key != 27);
+	}
+
+	////////////////////////////////	Driving		////////////////////////////
+	void accellerate()
+	{
+		if (engine.started() && speed < max_speed)
+		{
+			speed += 10;
+		}
+		if (speed > max_speed)speed = max_speed;
+		//std::this_thread::sleep_for(1s);
+	}
+	void free_wheeling()
+	{
+		
+		while (speed>0)
+		{
+			speed--;
+			std::this_thread::sleep_for(1s);
+		}
 	}
 };
 
