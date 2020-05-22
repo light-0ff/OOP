@@ -128,7 +128,8 @@ class Car
 	}control_panel;
 public:
 	Car(double tank_volume, double engine_consumption, unsigned int max_speed = 250) :
-		tank(tank_volume), engine(engine_consumption), driver_inside(false), speed(0)
+		tank(tank_volume), engine(engine_consumption), driver_inside(false), speed(0), max_speed(max_speed
+		)
 	{
 		control_panel.maim_thread = new std::thread(&Car::control, this);
 		std::cout << "Your car is ready to go. \nPress enter to get in. \nPress F to fill tank" << std::endl;
@@ -252,7 +253,10 @@ public:
 				break;
 			case 'R':
 			case 'r':
-				this->speed += 10; // менять скорость НЕ ГОТОВО
+				if (this->speed < this->max_speed) 
+				{
+					this->speed += 10; // менять скорость НЕ ГОТОВО
+				}
 				ride();
 				break;
 			}
