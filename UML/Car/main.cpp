@@ -196,6 +196,15 @@ public:
 		}
 		engine.stop();
 	}
+	void ride()
+	{
+		while (engine.started() && tank.give_fuel(engine.get_consuption_per_second()))
+		{
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for(1s);
+		}
+		engine.stop();
+	}
 	void control()
 	{
 		
@@ -232,6 +241,10 @@ public:
 				{
 					stop();
 				}
+				break;
+			case 'R':
+			case 'r':
+				ride();
 				break;
 			}
 		/*	using namespace std::chrono_literals;
