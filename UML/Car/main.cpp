@@ -117,9 +117,14 @@ class Car
 	unsigned int max_speed;
 	struct ControlPanel
 	{
-		std::thread* maim_thread;
-		std::thread* panel_thread;	//панель приборов
-		std::thread* idle_thread;	//холостой ход двигателя
+		//поток (thread) - ето последовательность команд процессораю В потоке запускается выполнение какой-то функции.
+		std::thread* maim_thread;	//етот поток создается при создании машины и существует столько, сколько существует машины
+		//етот поток принимает команды пользователя, позволяет войти и выйти из машины, а следовательно рождает и останавливает остальные потоки
+		std::thread* panel_thread;	//панель приборов. Мы видим панель приборов и можем на нее повлиять только когда мы находимся в машине
+		//етот поток независим от работы двигателя. Он существует только тогда когда водитель находится внутри
+		//этот поток отслеживает состояние,, в том числе и бака
+		std::thread* idle_thread;	//холостой ход двигателя. создается, когда мы заводим машину, и удаляется когда мы останавливаем двигатель
+									//етот поток влияет на состояние бака
 	}control_panel;
 public:
 	Car(double tank_volume, double engine_consumption, unsigned int max_speed = 250) :
@@ -198,12 +203,15 @@ public:
 	}
 	void ride()
 	{
-		while (engine.started() && tank.give_fuel(engine.get_consuption_per_second()))
+		
+		// Зависимость потребления от скорости ?
+		while (engine.started() && tank.give_fuel((tank.get_fuel_level() >= 5 ? 0.005 : 0.001) * this->speed))
 		{
+			std::cout << "я еду?\n";
 			using namespace std::chrono_literals;
 			std::this_thread::sleep_for(1s);
 		}
-		engine.stop();
+		//engine.stop();
 	}
 	void control()
 	{
@@ -244,6 +252,7 @@ public:
 				break;
 			case 'R':
 			case 'r':
+				this->speed += 10; // менять скорость НЕ ГОТОВО
 				ride();
 				break;
 			}
