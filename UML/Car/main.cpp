@@ -101,6 +101,8 @@ public:
 	{
 		std::cout << "Engine consuption:\t" << get_consuption() << "liters per 100 km" << std::endl;
 		std::cout << "Consuption per sec:\t" << get_consuption_per_second() << "liters per sec" << std::endl;
+		
+		
 		std::cout << "Engine is " << (is_started ? "started" : "stopped") << std::endl;
 	}
 
@@ -178,6 +180,7 @@ public:
 			system("CLS");
 			std::cout << "Engine is " << (engine.started() ? "started" : "stopped") << std::endl;
 			std::cout << "Fuel:\t" << tank.get_fuel_level() << " liters.\t" << std::endl;
+			if (tank.get_fuel_level() < 5) std::cout << "Low Fuel\n";
 			std::cout << speed << " km/h.\n";
 
 			using namespace std::chrono_literals;
@@ -195,6 +198,7 @@ public:
 	}
 	void control()
 	{
+		
 		char key=0;
 		do {
 			key = _getch();
