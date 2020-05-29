@@ -102,8 +102,8 @@ public:
 	{
 		std::cout << "Engine consuption:\t" << get_consuption() << "liters per 100 km" << std::endl;
 		std::cout << "Consuption per sec:\t" << get_consuption_per_second() << "liters per sec" << std::endl;
-		
-		
+
+
 		std::cout << "Engine is " << (is_started ? "started" : "stopped") << std::endl;
 	}
 
@@ -119,7 +119,7 @@ class Car
 	struct ControlPanel
 	{
 		//поток (thread) - ето последовательность команд процессораю В потоке запускается выполнение какой-то функции.
-		std::thread* maim_thread;	//етот поток создается при создании машины и существует столько, сколько существует машины
+		std::thread* main_thread;	//етот поток создается при создании машины и существует столько, сколько существует машины
 		//етот поток принимает команды пользователя, позволяет войти и выйти из машины, а следовательно рождает и останавливает остальные потоки
 		std::thread* panel_thread;	//панель приборов. Мы видим панель приборов и можем на нее повлиять только когда мы находимся в машине
 		//етот поток независим от работы двигателя. Он существует только тогда когда водитель находится внутри
@@ -127,6 +127,11 @@ class Car
 		std::thread* idle_thread;	//холостой ход двигателя. создается, когда мы заводим машину, и удаляется когда мы останавливаем двигатель
 									//етот поток влияет на состояние бака
 		std::thread* wheelinng_thread;
+
+		ControlPanel()
+		{
+			main_thread = panel_thread = idle_thread = wheelinng_thread = nullptr;
+		}
 	}control_panel;
 
 
@@ -135,13 +140,13 @@ public:
 		tank(tank_volume), engine(engine_consumption), driver_inside(false), speed(0), max_speed(max_speed
 		)
 	{
-		control_panel.maim_thread = new std::thread(&Car::control, this);
+		control_panel.main_thread = new std::thread(&Car::control, this);
 		std::cout << "Your car is ready to go." << std::endl;
 		std::cout << "[Enter] - to get in. \n[F] - to fill tank" << std::endl;
 	}
 	~Car()
 	{
-		control_panel.maim_thread->join();
+		control_panel.main_thread->join();
 		std::cout << "Your car is over" << std::endl;
 	}
 
@@ -156,7 +161,7 @@ public:
 		driver_inside = false;
 		control_panel.panel_thread->join();
 		system("cls");
-		std::cout << "You are on street, please press enter to get in\n";
+		std::cout << "You are on street, please press [Enter] to get in\n";
 	}
 	bool is_driver_inside()const
 	{
@@ -192,13 +197,13 @@ public:
 			std::cout << "Engine is " << (engine.started() ? "started" : "stopped");
 			std::cout << "\tFuel:\t" << tank.get_fuel_level() << " liters.\t" << std::endl;
 			//if (tank.get_fuel_level() < 5) std::cout << "Low Fuel\n";
-			std::cout << (tank.get_fuel_level() < 5 ?"Low Fuel\n":"\n");
+			std::cout << (tank.get_fuel_level() < 5 ? "Low Fuel\n" : "\n");
 			std::cout << speed << " km/h.\n";
 			std::cout << "[Enter] - to get out\n";
 			std::cout << "[I] - to ignite\n";
-			std::cout << "[R] - to ride(not working)\n";
+			//std::cout << "[R] - to ride(not working)\n";
 
-			
+
 			std::this_thread::sleep_for(500ms);
 		}
 	}
@@ -206,32 +211,33 @@ public:
 	{
 		while (engine.started() && tank.give_fuel(engine.get_consuption_per_second()))
 		{
-			
+
 			std::this_thread::sleep_for(1s);
 		}
 		engine.stop();
 	}
-	void ride()
-	{
-		
-		// Зависимость потребления от скорости ?
-		while (engine.started() && tank.give_fuel((tank.get_fuel_level() >= 5 ? 0.005 : 0.001) * this->speed))
-		{
-			std::cout << "я еду?\n"; //проверка на активность. потом удалить
-			
-			std::this_thread::sleep_for(1s);
-		}
-		//engine.stop();
-	}
+	//void ride()
+	//{
+	//	
+	//	// Зависимость потребления от скорости ?
+	//	while (engine.started() && tank.give_fuel((tank.get_fuel_level() >= 5 ? 0.005 : 0.001) * this->speed))
+	//	{
+	//		std::cout << "я еду?\n"; //проверка на активность. потом удалить
+	//		
+	//		std::this_thread::sleep_for(1s);
+	//	}
+	//	//engine.stop();
+	//}
 	void control()
 	{
-		
-		char key=0;
-		do {
+
+		char key = 0;
+		do
+		{
 			key = _getch();
 			switch (key)
 			{
-			//case 'E':
+				//case 'E':
 			case 13:
 				if (!is_driver_inside())get_in();
 				else get_out();
@@ -249,7 +255,7 @@ public:
 					std::cout << "Get out of car!" << std::endl;
 				}
 				break;
-			case 'I': 
+			case 'I':
 			case 'i':	//ignition
 				if (!engine.started())
 				{
@@ -262,23 +268,45 @@ public:
 				break;
 			case 'W':
 			case 'w':
-				accellerate();
-				if (speed > 0)control_panel.wheelinng_thread = new std::thread(&Car::free_wheeling, this);
-				if (control_panel.wheelinng_thread->joinable()) control_panel.wheelinng_thread->join();
-				
-				break;
-			case 'R':
-			case 'r':
-				if (this->speed < this->max_speed) 
+				if (engine.started())
 				{
-					this->speed += 10; // менять скорость НЕ ГОТОВО
+					speed += 10;
+					if (speed > max_speed) speed = max_speed;
 				}
-
-				ride();
+				break;
+			case 'S':
+			case 's':
+				if(speed > 20)speed -= 20;
+				else if (speed > 10) speed -= 10;
+				else if (speed > 5) speed -= 5;
+				else speed = 0;
 				break;
 			}
-		/*	using namespace std::chrono_literals;
-			std::this_thread::sleep_for(1s);*/
+
+
+			std::this_thread::sleep_for(1s);
+			if
+					(
+					speed > 0 &&
+					control_panel.wheelinng_thread == nullptr
+					)
+			{
+				control_panel.wheelinng_thread = new std::thread(&Car::free_wheeling, this);
+			}
+			/*else if (speed>0&&!control_panel.wheelinng_thread->joinable()) 
+			{ 
+				control_panel.wheelinng_thread = new std::thread(&Car::free_wheeling, this);
+			}*/
+			else if
+					(
+					speed == 0 &&
+					control_panel.wheelinng_thread &&
+					control_panel.wheelinng_thread->joinable()
+					)
+			{
+				control_panel.wheelinng_thread->join();
+				control_panel.wheelinng_thread = nullptr;
+			}
 		} while (key != 27);
 	}
 
@@ -294,8 +322,8 @@ public:
 	}
 	void free_wheeling()
 	{
-		
-		while (speed>0)
+
+		while (speed > 0)
 		{
 			speed--;
 			std::this_thread::sleep_for(1s);
