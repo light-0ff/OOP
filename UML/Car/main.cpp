@@ -302,7 +302,6 @@ public:Car(double tank_volume, double engine_consumption, unsigned int max_speed
 			   //change_consumption();
 		   } while (key != 27);
 	   }
-	   int musor;
 	   /////////////////////////////	Driving		//////////////////////////////
 
 	   void free_wheeling()
