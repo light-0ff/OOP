@@ -1,6 +1,7 @@
 #include<iostream>
 #include<conio.h>
 #include<thread>
+#include<Windows.h>
 using namespace std::chrono_literals;
 
 class Tank
@@ -57,6 +58,9 @@ class Engine
 	double consumption;
 	double consumption_per_second;
 	bool is_started;
+	int rpm;
+	int rpm_min = 1600;
+	int rpm_max = 4500;
 public:
 	const double get_consumption()const
 	{
@@ -70,6 +74,18 @@ public:
 	{
 		//if (consumption_per_second > .0001 && consumption_per_second < .009)
 		this->consumption_per_second = consumption_per_second;
+	}
+	int get_rpm()const
+	{
+		return rpm;
+	}
+	int get_rpm_min()const
+	{
+		return rpm_min;
+	}
+	int get_rpm_max()const
+	{
+		return rpm_max;
 	}
 
 	Engine(double consumption)
@@ -86,10 +102,12 @@ public:
 	void start()
 	{
 		is_started = true;
+		rpm = rpm_min;
 	}
 	void stop()
 	{
 		is_started = false;
+		rpm = 0;
 	}
 	bool started()const
 	{
@@ -208,15 +226,29 @@ public:Car(double tank_volume, double engine_consumption, unsigned int max_speed
 		   while (driver_inside)
 		   {
 			   system("CLS");
-			   for (int i = 0; i < speed / 2; i++)
+			   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			   std::cout << "RPM:\t";
+			   for (int i = 0; i < engine.get_rpm() / 100; i++)
 			   {
-				   if (i > 120)break;
+				   if (i>110)   break;
+				   SetConsoleTextAttribute(hConsole, i >= 80 ? 12 : 7);
 				   std::cout << "|";
 			   }
 			   std::cout << std::endl;
+			   std::cout << "Speed:\t";
+			   for (int i = 0; i < speed / 2; i++)
+			   {
+				   if (i > 110)break;
+				   SetConsoleTextAttribute(hConsole, i>=100? 12 : i >= 50? 10: 7);
+				   std::cout << "|";
+			   }
+			   SetConsoleTextAttribute(hConsole, 7);
+			   std::cout << std::endl;
 			   std::cout << "Engine is " << (engine.started() ? "started" : "stopped") << ".\n";
 			   std::cout << "Fuel:\t" << tank.get_fuel_level() << " liters.\n";
+			   SetConsoleTextAttribute(hConsole, 12);
 			   std::cout << (tank.get_fuel_level() < 5 ? "LOW FUEL" : "") << std::endl;
+			   SetConsoleTextAttribute(hConsole, 7);
 			   std::cout << "Speed:\t" << speed << " km/h.\n";
 
 			   std::cout << "Consumption per second: " << engine.get_consumption_per_second() << std::endl;
@@ -279,7 +311,7 @@ public:Car(double tank_volume, double engine_consumption, unsigned int max_speed
 				   {
 					   speed += 10;
 					   if (speed > max_speed)speed = max_speed;
-					   std::this_thread::sleep_for(1s);
+					   std::this_thread::sleep_for(800ms);
 				   }
 				   break;
 			   case 'S':
@@ -288,7 +320,7 @@ public:Car(double tank_volume, double engine_consumption, unsigned int max_speed
 				   else if (speed > 10)speed -= 10;
 				   else if (speed > 5)speed -= 5;
 				   else speed = 0;
-				   std::this_thread::sleep_for(1s);
+				   std::this_thread::sleep_for(800ms);
 				   break;
 			   }
 			   std::this_thread::sleep_for(1ms);
