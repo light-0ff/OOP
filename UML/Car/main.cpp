@@ -105,8 +105,33 @@ public:
 
 class Car
 {
+	class Transmission
+	{
+		char mode;
+	public:
+		char get_mode()
+		{
+			return mode;
+		}
+		void set_mode(char mode)
+		{
+			if (mode >= '1' && mode <= '5' ||
+				mode == 'n' || mode == 'N' ||
+				mode == 'p' || mode == 'P' ||
+				mode == 'r' || mode == 'R' ) this->mode = mode;
+		}
+		Transmission()
+		{
+			mode = '1';
+		}
+		~Transmission()
+		{
+
+		}
+	};
 	Engine engine;
 	Tank tank;
+	Transmission transmission;
 	bool driver_inside;
 	unsigned int speed;
 	unsigned int max_speed;
